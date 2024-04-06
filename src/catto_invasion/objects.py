@@ -30,12 +30,12 @@ from pygame.color import Color
 from pygame.draw import rect
 from pygame.surface import Surface
 
-from checkers import sprite
+from catto_invasion import sprite
 
 if TYPE_CHECKING:
     from pygame.font import Font
 
-    from checkers.component import Event
+    from catto_invasion.component import Event
 
 
 class Text(sprite.Sprite):
@@ -59,9 +59,41 @@ class Text(sprite.Sprite):
         self.color = Color(0xFF, 0xFF, 0xFF)
         self.font = font
 
+    def render_multiline(self, text: str, y_sep: int = 0) -> list[Surface]:
+        """Return list of rendered line surfaces."""
+        if not text:
+            return [self.font.render("", True, self.color)]
+        lines = text.splitlines()
+        return [self.font.render(line, True, self.color) for line in lines]
+
+    def render_multiline_surf(
+        self,
+        text: str,
+        y_sep: int = 0,
+    ) -> Surface:
+        """Return rendered multiline text surface."""
+        surfaces = self.render_multiline(text, y_sep)
+        if len(surfaces) == 1:
+            return surfaces[0]
+
+        total_y_sep = y_sep * len(surfaces) - 1
+        height = (
+            sum(surface.get_size()[1] for surface in surfaces) + total_y_sep
+        )
+        width = max(surface.get_width() for surface in surfaces)
+
+        image = Surface((width, height)).convert_alpha()
+        image.fill((0, 0, 0, 0))
+
+        y = 0
+        for surface in surfaces:
+            image.blit(surface, (0, y))
+            y += y_sep + surface.get_size()[1]
+        return image
+
     def render(self) -> Surface:
         """Render text surface."""
-        return self.font.render(self.__text, True, self.color)
+        return self.render_multiline_surf(self.__text)
 
     def update_image(self) -> None:
         """Update image."""
@@ -111,7 +143,8 @@ class OutlinedText(Text):
 
     def render(self) -> Surface:
         """Render text and draw outline behind it."""
-        text_surf = self.font.render(f" {self.text} ", True, self.color)
+        text = "\n".join(f" {line} " for line in self.text.splitlines())
+        text_surf = self.render_multiline_surf(text)
 
         text_rect = text_surf.get_rect()
 

@@ -279,12 +279,12 @@ class ComponentManager(Component):
     def temporary_component(
         self,
         component: Component,
-    ) -> Generator[None, None, None]:
+    ) -> Generator[Component, None, None]:
         """Temporarily add given component but then remove after exit."""
         name = component.name
         self.add_component(component)
         try:
-            yield
+            yield component
         finally:
             if self.component_exists(name):
                 self.remove_component(name)

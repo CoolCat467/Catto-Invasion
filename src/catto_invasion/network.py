@@ -38,13 +38,17 @@ from typing import (
 
 import trio
 
-from checkers.base_io import BaseAsyncReader, BaseAsyncWriter, StructFormat
-from checkers.component import Component, ComponentManager, Event
+from catto_invasion.base_io import (
+    BaseAsyncReader,
+    BaseAsyncWriter,
+    StructFormat,
+)
+from catto_invasion.component import Component, ComponentManager, Event
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
-
     from types import TracebackType
+
+    from typing_extensions import Self
 
 BytesConvertable: TypeAlias = SupportsIndex | Iterable[SupportsIndex]
 
@@ -110,7 +114,7 @@ class NetworkComponent(Component, BaseAsyncReader, BaseAsyncWriter):
         while max_read_count := length - len(content):
             received = b""
             ##            try:
-##            with trio.move_on_after(self.timeout):
+            ##            with trio.move_on_after(self.timeout):
             received = await self.stream.receive_some(max_read_count)
             ##            except (trio.BrokenResourceError, trio.ClosedResourceError):
             ##                await self.close()

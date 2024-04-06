@@ -3,12 +3,12 @@ requires = ["setuptools >= 64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "checkers"
+name = "catto_invasion"
 dynamic = ["version"]
 authors = [
   { name="CoolCat467", email="CoolCat467@duck.com" },
 ]
-description = "Graphical Checkers Game with AI support"
+description = "Graphical Catto Game with AI support"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
@@ -39,20 +39,19 @@ keywords = [
 dependencies = [
     "pygame~=2.5.2",
     "typing_extensions",
-    "trio~=0.24.0",
+    "trio~=0.25.0",
     "cryptography",
 ]
 
 [tool.setuptools.dynamic]
-version = {attr = "checkers.game.__version__"}
+version = {attr = "catto_invasion.game.__version__"}
 
 [project.urls]
-"Homepage" = "https://github.com/CoolCat467/Checkers"
-"Source" = "https://github.com/CoolCat467/Checkers"
-"Bug Tracker" = "https://github.com/CoolCat467/Checkers/issues"
+"Source" = "https://github.com/CoolCat467/Catto-Invasion"
+"Bug Tracker" = "https://github.com/CoolCat467/Catto-Invasion/issues"
 
 [project.scripts]
-checkers_game = "checkers.game:cli_run"
+catto_invasion_game = "catto_invasion.game:cli_run"
 
 [tool.setuptools.package-data]
 checkers = ["py.typed", "data/*"]

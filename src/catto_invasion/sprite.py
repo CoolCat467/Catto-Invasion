@@ -34,9 +34,9 @@ from pygame.rect import Rect
 from pygame.sprite import LayeredDirty, LayeredUpdates, WeakDirtySprite
 from pygame.surface import Surface
 
-from checkers.component import Component, ComponentManager, Event
-from checkers.statemachine import AsyncStateMachine
-from checkers.vector import Vector2
+from catto_invasion.component import Component, ComponentManager, Event
+from catto_invasion.statemachine import AsyncStateMachine
+from catto_invasion.vector import Vector2
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -158,9 +158,9 @@ class Sprite(ComponentManager, WeakDirtySprite):
             sprites_at = group.get_sprites_at(position)
             if not sprites_at:
                 continue
-            top = sprites_at[-1]
-            if top != self:
-                return False
+            for top in reversed(sprites_at):
+                if top != self and top.visible:
+                    return False
         return True
 
 
