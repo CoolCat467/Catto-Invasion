@@ -8,7 +8,7 @@ dynamic = ["version"]
 authors = [
   { name="CoolCat467", email="CoolCat467@duck.com" },
 ]
-description = "Graphical Catto Game with AI support"
+description = "Graphical Catto Game"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
@@ -32,10 +32,7 @@ classifiers = [
     "Framework :: Trio",
     "Typing :: Typed",
 ]
-keywords = [
-    "ai", "two-player", "checkers", "single-player",
-    "checkers-game", "ai-support", "networked-game"
-]
+keywords = []
 dependencies = [
     "pygame~=2.5.2",
     "typing_extensions",
@@ -54,7 +51,7 @@ version = {attr = "catto_invasion.game.__version__"}
 catto_invasion_game = "catto_invasion.game:cli_run"
 
 [tool.setuptools.package-data]
-checkers = ["py.typed", "data/*"]
+catto_invasion = ["py.typed", "data/*"]
 
 [tool.mypy]
 mypy_path = "src"
@@ -141,7 +138,7 @@ extend-ignore = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov-report term-missing --cov=checkers"
+addopts = "--cov-report term-missing --cov=catto_invasion"
 testpaths = [
     "tests",
 ]

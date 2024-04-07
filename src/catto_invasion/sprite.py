@@ -434,6 +434,7 @@ class AnimationComponent(Component):
 
     async def tick(self, tick_event: Event[TickEventData]) -> None:
         """Update controller if it's time to and update sprite image."""
+        await trio.lowlevel.checkpoint()
         passed = tick_event.data.time_passed
         new = None
         if self.update_every == 0:
@@ -572,6 +573,7 @@ class TargetingComponent(Component):
             self.__reached = True
             await self.raise_event(Event(self.event_raise_name, None))
             return
+        await trio.lowlevel.checkpoint()
 
         travel_distance = min(
             self.to_destination.magnitude(),
@@ -621,6 +623,7 @@ class DragClickEventComponent(Component):
         event: Event[PygameMouseButtonEventData],
     ) -> None:
         """Set pressed for event button if selected. Also raise Click events."""
+        await trio.lowlevel.checkpoint()
         if not self.manager_exists:
             return
         sprite = cast(Sprite, self.get_component("sprite"))
@@ -648,6 +651,7 @@ class DragClickEventComponent(Component):
         event: Event[PygameMouseMotion],
     ) -> None:
         """PygameMouseMotion event -> drag."""
+        await trio.lowlevel.checkpoint()
         if not self.manager_exists:
             return
         async with trio.open_nursery() as nursery:

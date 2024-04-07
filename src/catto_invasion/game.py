@@ -29,7 +29,15 @@ import platform
 import sys
 from os import path
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Final, NamedTuple, TypeAlias, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Final,
+    NamedTuple,
+    TypeAlias,
+    TypedDict,
+    TypeVar,
+)
 
 import pygame
 import trio
@@ -40,6 +48,7 @@ from pygame.rect import Rect
 from catto_invasion import objects, sprite
 from catto_invasion.async_clock import Clock
 from catto_invasion.component import (
+    Component,
     ComponentManager,
     Event,
     ExternalRaiseManager,
@@ -59,7 +68,6 @@ if TYPE_CHECKING:
         Callable,
     )
 
-    from pygame.surface import Surface
 
 SCREEN_SIZE = (640, 480)
 
@@ -85,37 +93,71 @@ IS_WINDOWS: Final = platform.system() == "Windows"
 Pos: TypeAlias = tuple[int, int]
 
 
-def render_text(
-    font_name: str,
-    font_size: int,
-    text: str,
-    color: tuple[int, int, int],
-) -> Surface:
-    """Render text with a given font at font_size with the text in the color of color."""
-    # Load the font at the size of font_size
-    font = pygame.font.Font(font_name, font_size)
-    # Using the loaded font, render the text in the color of color
-    return font.render(text, False, color)
+class PygameVideoResize(TypedDict):
+    """PygameVideoResize event data."""
+
+    size: tuple[int, int]
+    w: int
+    h: int
+
+
+class WindowResizeAutoMove(Component):
+    """`window_resize_automove` component.
+
+    Automatically reposition sprites when video area is resized.
+    """
+
+    __slots__ = ("last_size",)
+
+    def __init__(self) -> None:
+        """Initialize window_resize_automove component."""
+        super().__init__("window_resize_automove")
+
+        self.last_size = Vector2.from_iter(SCREEN_SIZE)
+
+    def bind_handlers(self) -> None:
+        """Register PygameVideoResize handler."""
+        self.register_handler("PygameVideoResize", self.handle_resize)
+
+    async def handle_resize(self, event: Event[PygameVideoResize]) -> None:
+        """Handle Resize Event."""
+        old = self.last_size
+        self.last_size = Vector2.from_iter(event.data["size"])
+        delta = self.last_size - old
+
+        sprite: sprite.Sprite = self.get_component("sprite")
+        sprite.location += delta // 2
+        sprite.dirty = 1
+        await trio.lowlevel.checkpoint()
 
 
 class WiggleData(NamedTuple):
+    """Wiggle data."""
+
     wiggle: tuple[int, int]
     wiggle_time: float
 
 
 class TalkData(NamedTuple):
+    """Talk data."""
+
     text: str
     typewriter_delay: int = 0.01
 
 
 class TextBox(objects.OutlinedText):
+    """TextBox object."""
+
     __slots__ = ("sound",)
 
     def __init__(self) -> None:
+        """Initialize textbox."""
         super().__init__(
             "textbox",
             pygame.font.Font(DATA_FOLDER / "VeraSerif.ttf", 32),
         )
+
+        self.add_component(WindowResizeAutoMove())
 
         self.color = WHITE
         self.inside = (18, 18, 18)
@@ -128,6 +170,7 @@ class TextBox(objects.OutlinedText):
         self.sound = pygame.mixer.Sound(DATA_FOLDER / "talky.wav")
 
     def bind_handlers(self) -> None:
+        """Register event handlers."""
         super().bind_handlers()
 
         self.register_handlers(
@@ -139,11 +182,13 @@ class TextBox(objects.OutlinedText):
         )
 
     async def text_clear(self, event: Event[None]) -> None:
+        """Clear text and set to not be visible."""
         self.text = ""
         self.visible = False
         await trio.lowlevel.checkpoint()
 
     async def text_add(self, event: Event[str]) -> None:
+        """Add event data to current text, play talky talky sound, and make visible."""
         self.text += event.data
         self.visible = True
         await trio.lowlevel.checkpoint()
@@ -151,6 +196,7 @@ class TextBox(objects.OutlinedText):
         self.sound.play()
 
     async def text_set(self, event: Event[str]) -> None:
+        """Set text to event data and make visible."""
         self.text = event.data
         self.visible = True
         self.location = Vector2(SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2 + 150)
@@ -172,6 +218,8 @@ class Speaker(sprite.Sprite):
         )
 
         self.add_component(sprite.DragClickEventComponent())
+        self.add_component(WindowResizeAutoMove())
+
         self.location = Vector2(*SCREEN_SIZE) // 2
 
     def bind_handlers(self) -> None:
@@ -196,6 +244,7 @@ class Speaker(sprite.Sprite):
         self.add_component(text_box)
 
         group.add(text_box)
+        await trio.lowlevel.checkpoint()
 
     async def click(
         self,
@@ -262,6 +311,7 @@ class FPSCounter(objects.Text):
         self.text = f"FPS: {event.data.fps:.0f}"
         self.location = Vector2.from_iter(self.image.get_size()) // 2 + (5, 5)
         self.visible = True
+        await trio.lowlevel.checkpoint()
 
     def bind_handlers(self) -> None:
         """Register tick event handler."""
@@ -318,6 +368,7 @@ class GameState(AsyncState["CattoClient"]):
         assert self.machine is not None
         self.machine.remove_group(self.id)
         self.manager.unbind_components()
+        await trio.lowlevel.checkpoint()
 
     def change_state(
         self,
@@ -342,6 +393,7 @@ class InitializeState(AsyncState["CattoClient"]):
 
     async def check_conditions(self) -> str:
         """Go to title."""
+        await trio.lowlevel.checkpoint()
         return "title"
 
 
@@ -362,6 +414,8 @@ class KwargOutlineText(OutlinedText):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        self.add_component(WindowResizeAutoMove())
+
 
 class KwargButton(Button):
     """Button with attributes settable via keyword arguments."""
@@ -380,6 +434,8 @@ class KwargButton(Button):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+        self.add_component(WindowResizeAutoMove())
+
 
 class TitleState(GameState):
     """Game Title State."""
@@ -393,6 +449,7 @@ class TitleState(GameState):
     async def entry_actions(self) -> None:
         """Add buttons."""
         assert self.machine is not None
+        await trio.lowlevel.checkpoint()
         self.id = self.machine.new_group("title")
 
         button_font = pygame.font.Font(
