@@ -125,16 +125,16 @@ class WindowResizeAutoMove(Component):
         self.last_size = Vector2.from_iter(event.data["size"])
         delta = self.last_size - old
 
-        sprite: sprite.Sprite = self.get_component("sprite")
-        sprite.location += delta // 2
-        sprite.dirty = 1
+        sprite_: sprite.Sprite = self.get_component("sprite")
+        sprite_.location += delta // 2
+        sprite_.dirty = 1
         await trio.lowlevel.checkpoint()
 
 
 class WiggleData(NamedTuple):
     """Wiggle data."""
 
-    wiggle: tuple[int, int]
+    wiggle: Vector2 | tuple[int, int]
     wiggle_time: float
 
 
@@ -142,7 +142,7 @@ class TalkData(NamedTuple):
     """Talk data."""
 
     text: str
-    typewriter_delay: int = 0.01
+    typewriter_delay: float = 0.01
 
 
 class TextBox(objects.OutlinedText):
@@ -243,7 +243,7 @@ class Speaker(sprite.Sprite):
         text_box = TextBox()
         self.add_component(text_box)
 
-        group.add(text_box)
+        group.add(text_box)  # type: ignore[arg-type]
         await trio.lowlevel.checkpoint()
 
     async def click(
@@ -613,7 +613,7 @@ class CattoClient(sprite.GroupProcessor):
 async def async_run() -> None:
     """Handle main event loop."""
     # Set up globals
-    global SCREEN_SIZE, screen
+    global SCREEN_SIZE
 
     # Set up the screen
     screen = pygame.display.set_mode(SCREEN_SIZE, RESIZABLE, 32, vsync=VSYNC)

@@ -56,7 +56,7 @@ class Text(sprite.Sprite):
         super().__init__(name)
 
         self.__text = "None"
-        self.color = Color(0xFF, 0xFF, 0xFF)
+        self.color: Color | tuple[int, int, int] = Color(0xFF, 0xFF, 0xFF)
         self.font = font
 
     def render_multiline(self, text: str, y_sep: int = 0) -> list[Surface]:
