@@ -229,13 +229,6 @@ def test_drag_click_event_component_init(
     assert drag_click_event_component.pressed == {}
 
 
-def test_drag_click_event_component_bind_handlers(
-    drag_click_event_component: DragClickEventComponent,
-) -> None:
-    # This test is more complex and might require mocking Pygame events
-    pass
-
-
 def test_group_processor_init(group_processor: GroupProcessor) -> None:
     assert group_processor.groups == {}
     assert group_processor.group_names == {}
@@ -246,11 +239,6 @@ def test_group_processor_new_group(group_processor: GroupProcessor) -> None:
     gid = group_processor.new_group("test_group")
     assert gid in group_processor.groups
     assert "test_group" in group_processor.group_names
-
-
-def test_group_processor_draw(group_processor: GroupProcessor) -> None:
-    # This test is more complex and might require mocking Pygame surfaces
-    pass
 
 
 @pytest.mark.trio()

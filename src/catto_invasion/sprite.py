@@ -769,5 +769,5 @@ def convert_pygame_event(event: PygameEvent) -> Event[Any]:
     return Event(f"Pygame{event_name(event.type)}", event.dict)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: nocover
     print(f"{__title__}\nProgrammed by {__author__}.")
