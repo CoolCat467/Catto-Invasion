@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING
 
 from pygame.color import Color
 from pygame.draw import rect
+from pygame.locals import SRCALPHA
 from pygame.surface import Surface
 
 from catto_invasion import sprite
@@ -82,7 +83,7 @@ class Text(sprite.Sprite):
         )
         width = max(surface.get_width() for surface in surfaces)
 
-        image = Surface((width, height)).convert_alpha()
+        image = Surface((width, height), flags=SRCALPHA)
         image.fill((0, 0, 0, 0))
 
         y = 0
@@ -151,7 +152,7 @@ class OutlinedText(Text):
         extra = self.border_width * 2
         w, h = text_rect.size
 
-        image = Surface((w + extra, h + extra)).convert_alpha()
+        image = Surface((w + extra, h + extra), flags=SRCALPHA)
         image.fill((0, 0, 0, 0))
         rect(
             image,

@@ -105,33 +105,23 @@ class Sprite(ComponentManager, WeakDirtySprite):
         doc="Location (Center of image)",
     )
 
-    def _get_image_size(self) -> tuple[int, int]:
-        """Return size of internal rectangle."""
-        return self.rect.size
-
-    def _set_image_size(self, value: tuple[int, int]) -> None:
-        """Set internal rectangle size while keeping self.location intact."""
-        pre_loc = self.location
-        self.rect.size = value
-        if self.update_location_on_resize:
-            self.location = pre_loc
-
-    image_size = property(
-        _get_image_size,
-        _set_image_size,
-        doc="Image Size (Automattically updates location if self.update_location_on_resize is set)",
-    )
-
     def __get_image(self) -> Surface | None:
         """Return the surface of this sprite."""
         return self.__image
 
     def __set_image(self, image: Surface | None) -> None:
-        """Set surface, update image dimensions, and set dirty bit."""
+        """Set surface, update image dimensions, and set dirty bit.
+
+        Automatically updates location if self.update_location_on_resize is set.
+        """
         self.__image = image
         if image is not None:
-            self.image_size = image.get_size()
-        self.dirty = 1
+            pre_loc = self.location
+            self.rect.size = image.get_size()
+            if self.update_location_on_resize:
+                self.location = pre_loc
+        if self.dirty == 0:
+            self.dirty = 1
 
     image = property(
         __get_image,
@@ -144,9 +134,7 @@ class Sprite(ComponentManager, WeakDirtySprite):
         """Return True if visible and collision with point."""
         if not self.visible:
             return False
-        if not self.rect.collidepoint(position):
-            return False
-        return True
+        return self.rect.collidepoint(position)
 
     def is_topmost(self, position: tuple[int, int]) -> bool:
         """Return True if topmost at point in any group this sprite is in."""
@@ -558,6 +546,18 @@ class TargetingComponent(Component):
         """Return vector of self.location to self.destination."""
         sprite = cast(Sprite, self.get_component("sprite"))
         return Vector2.from_points(sprite.location, self.destination)
+
+    def estimated_eta(self) -> float:
+        """Return estimated time of arrival (in time_passed)."""
+        if self.__reached:
+            return 0.0
+
+        movement = cast(MovementComponent, self.get_component("movement"))
+
+        if movement.speed <= 0:
+            return float("inf")
+
+        return self.to_destination.magnitude() / movement.speed
 
     async def move_destination_time(self, time_passed: float) -> None:
         """Move with time_passed."""
