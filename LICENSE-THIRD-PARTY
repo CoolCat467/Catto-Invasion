@@ -3,13 +3,14 @@
 Applies to:
     - Copyright (c) 2023, ItsDrike
       All rights reserved.
-        - src/checkers/base_io.py: Entire file
-        - src/checkers/buffer.py: Entire file
-        - src/checkers/encryption.py: Entire file
-        - src/checkers/utils.py: Entire file
+        - src/catto_invasion/base_io.py: Entire file
+        - src/catto_invasion/buffer.py: Entire file
+        - src/catto_invasion/encryption.py: Entire file
+        - src/catto_invasion/utils.py: Entire file
         - tests/helpers.py: Entire file
         - tests/protocol_helpers.py: Entire file
         - tests/test_base_io.py: Entire file
+        - tests/test_buffer.py: Entire file
         - tests/test_encryption.py: Entire file
         - tests/test_utils.py: Entire file
 ---------------------------------------------------------------------------------------------------
