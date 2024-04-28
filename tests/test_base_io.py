@@ -6,10 +6,11 @@ from __future__ import annotations
 __author__ = "ItsDrike"
 __license__ = "LGPL-3.0-only"
 
+
 import platform
 import struct
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Final
 from unittest.mock import AsyncMock, Mock
 
 import pytest
@@ -29,6 +30,8 @@ from protocol_helpers import (
     WriteFunctionAsyncMock,
     WriteFunctionMock,
 )
+
+PATH: Final = "catto_invasion"
 
 # region: Initializable concrete implementations of ABC classes.
 
@@ -187,10 +190,10 @@ class WriterTests(ABC):
         This mock object will either be Mock, or AsyncMock instance, depending on whether we're in async or sync mode.
         """
         if isinstance(self.writer, SyncWriter):
-            patch_path = "mcproto.protocol.base_io.BaseSyncWriter"
+            patch_path = f"{PATH}.base_io.BaseSyncWriter"
             mock_type = Mock
         else:
-            patch_path = "mcproto.protocol.base_io.BaseAsyncWriter"
+            patch_path = f"{PATH}.base_io.BaseAsyncWriter"
             mock_type = AsyncMock
 
         def autopatch(function_name: str) -> Mock | AsyncMock:
@@ -454,10 +457,10 @@ class ReaderTests(ABC):
         This mock object will either be Mock, or AsyncMock instance, depending on whether we're in async or sync mode.
         """
         if isinstance(self.reader, SyncReader):
-            patch_path = "mcproto.protocol.base_io.BaseSyncReader"
+            patch_path = f"{PATH}.base_io.BaseSyncReader"
             mock_type = Mock
         else:
-            patch_path = "mcproto.protocol.base_io.BaseAsyncReader"
+            patch_path = f"{PATH}.base_io.BaseAsyncReader"
             mock_type = AsyncMock
 
         def autopatch(function_name: str) -> Mock | AsyncMock:
