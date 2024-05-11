@@ -66,6 +66,7 @@ if TYPE_CHECKING:
     from collections.abc import (
         Awaitable,
         Callable,
+        Generator,
     )
 
 
@@ -89,6 +90,8 @@ T = TypeVar("T")
 DATA_FOLDER: Final = Path(__file__).parent / "data"
 
 IS_WINDOWS: Final = platform.system() == "Windows"
+
+FONT_FILE = DATA_FOLDER / "unifont-15.1.05.otf"
 
 Pos: TypeAlias = tuple[int, int]
 
@@ -154,7 +157,7 @@ class TextBox(objects.OutlinedText):
         """Initialize textbox."""
         super().__init__(
             "textbox",
-            pygame.font.Font(DATA_FOLDER / "VeraSerif.ttf", 32),
+            pygame.font.Font(FONT_FILE, 32),
         )
 
         self.add_component(WindowResizeAutoMove())
@@ -187,13 +190,15 @@ class TextBox(objects.OutlinedText):
         self.visible = False
         await trio.lowlevel.checkpoint()
 
-    async def text_add(self, event: Event[str]) -> None:
+    async def text_add(self, event: Event[tuple[str, bool]]) -> None:
         """Add event data to current text, play talky talky sound, and make visible."""
-        self.text += event.data
+        text, play_sound = event.data
+        self.text += text
         self.visible = True
         await trio.lowlevel.checkpoint()
         self.location = Vector2(SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2 + 150)
-        self.sound.play()
+        if play_sound:
+            self.sound.play()
 
     async def text_set(self, event: Event[str]) -> None:
         """Set text to event data and make visible."""
@@ -201,6 +206,23 @@ class TextBox(objects.OutlinedText):
         self.visible = True
         self.location = Vector2(SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2 + 150)
         await trio.lowlevel.checkpoint()
+
+
+def text_with_delays(text: str) -> Generator[tuple[str, int], None, None]:
+    """Yield characters and delay types to wait.
+
+    0 is short, 1 is normal, 2 is long.
+    """
+    short_wait = set(" ")
+    long_wait = set(",.?!")
+
+    for char in text:
+        if char in short_wait:
+            yield char, 0
+        elif char in long_wait:
+            yield char, 2
+        else:
+            yield char, 1
 
 
 class Speaker(sprite.Sprite):
@@ -276,21 +298,26 @@ class Speaker(sprite.Sprite):
         await self.raise_event(Event(f"{self.name}_set_visible", True))
         await self.raise_event(Event("text_clear", None))
         degrees = 0
-        for char in event.data:
+        for char, delay_type in text_with_delays(event.data):
+            distance = {0: 0, 1: 5, 2: 10}[delay_type]
+
             degrees = (degrees + 65) % 360
-            await self.raise_event(Event("text_add", char))
-            wiggle = Vector2.from_degrees(degrees, 5)
+            await self.raise_event(Event("text_add", (char, delay_type != 0)))
+            wiggle = Vector2.from_degrees(degrees, distance)
+            wiggle_delay = {0: 0.1, 1: 0.1, 2: 0.3}[delay_type]
             await self.raise_event(
                 Event(
                     f"{self.name}_wiggle",
                     WiggleData(
                         wiggle,
-                        0.1,  # event.data.typewriter_delay
+                        wiggle_delay,  # event.data.typewriter_delay
                     ),
                 ),
             )
             ##            await trio.sleep(event.data.typewriter_delay)
-            await trio.sleep(0.01)
+
+
+##            await trio.sleep(0.005)
 
 
 class FPSCounter(objects.Text):
@@ -521,6 +548,13 @@ class TitleState(GameState):
 ##        return "play_hosting"  # "play_hosting" # "play_joining"
 
 
+class Record(NamedTuple):
+    """Database record object."""
+
+    position: str
+    events: dict[str, str]
+
+
 class PlayState(GameState):
     """Game Play State."""
 
@@ -565,17 +599,25 @@ class PlayState(GameState):
 
         await self.machine.raise_event(Event("init", None))
 
-        record = self.db[self.position]
-        self.position = record["position"]
-        for event_name, event_data in record["events"].items():
-            await self.machine.raise_event(Event(event_name, event_data))
+        results = self.db[self.position]
+        record = Record(position=results["position"], events=results["events"])
+
+        await self.handle_record(record)
+
+    async def handle_record(self, record: Record) -> None:
+        """Raise events from record."""
+        # print(f'{record = }')
+        self.position = record.position
+        for event_name, event_data in record.events.items():
+            event = Event(event_name, event_data)
+            # print(f'{event = }')
+            await self.machine.raise_event(event)
 
     async def handle_speaker_clicked(self, event: Event[str]) -> None:
         """Handle speacker clicked event."""
-        record = self.db[self.position][event.data]
-        self.position = record["position"]
-        for event_name, event_data in record["events"].items():
-            await self.machine.raise_event(Event(event_name, event_data))
+        results = self.db[self.position][event.data]
+        record = Record(position=results["position"], events=results["events"])
+        await self.handle_record(record)
 
 
 class CattoClient(sprite.GroupProcessor):

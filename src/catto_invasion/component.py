@@ -207,6 +207,8 @@ class ComponentManager(Component):
         nursery: trio.Nursery,
     ) -> None:
         """Raise event in a particular trio nursery."""
+        await trio.lowlevel.checkpoint()
+
         # Forward leveled events up; They'll come back to us soon enough.
         if self.manager_exists and event.pop_level():
             await super().raise_event(event)

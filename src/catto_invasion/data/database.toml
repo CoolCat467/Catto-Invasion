@@ -9,7 +9,7 @@ position = '1'
 
 [0.cat_babushka.events]
 cat_babushka_talk = "Welcome my child!"
-
+#cat_babushka_talk = "добро пожаловать мой ребёнок!"
 
 [1.cat_babushka]
 position = '2'
