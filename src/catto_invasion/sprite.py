@@ -71,7 +71,7 @@ class PygameMouseMotion(PygameMouseEventData):
 
 
 class Sprite(ComponentManager, WeakDirtySprite):
-    """Client sprite component."""
+    """Client dirty sprite component manager."""
 
     __slots__ = ("rect", "__image", "mask", "update_location_on_resize")
 
@@ -423,6 +423,7 @@ class AnimationComponent(Component):
     async def tick(self, tick_event: Event[TickEventData]) -> None:
         """Update controller if it's time to and update sprite image."""
         await trio.lowlevel.checkpoint()
+
         passed = tick_event.data.time_passed
         new = None
         if self.update_every == 0:
@@ -624,6 +625,7 @@ class DragClickEventComponent(Component):
     ) -> None:
         """Set pressed for event button if selected. Also raise Click events."""
         await trio.lowlevel.checkpoint()
+
         if not self.manager_exists:
             return
         sprite = cast(Sprite, self.get_component("sprite"))
@@ -652,6 +654,7 @@ class DragClickEventComponent(Component):
     ) -> None:
         """PygameMouseMotion event -> drag."""
         await trio.lowlevel.checkpoint()
+
         if not self.manager_exists:
             return
         async with trio.open_nursery() as nursery:
@@ -770,4 +773,4 @@ def convert_pygame_event(event: PygameEvent) -> Event[Any]:
 
 
 if __name__ == "__main__":  # pragma: nocover
-    print(f"{__title__}\nProgrammed by {__author__}.")
+    print(f"{__title__}\nProgrammed by {__author__}.\n")

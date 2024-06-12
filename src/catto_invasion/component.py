@@ -2,7 +2,7 @@
 
 # Programmed by CoolCat467
 
-# Copyright (C) 2023  CoolCat467
+# Copyright (C) 2023-2024  CoolCat467
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ class Component:
     __slots__ = ("name", "__manager")
 
     def __init__(self, name: str) -> None:
-        """Initialise with name."""
+        """Initialize with name."""
         self.name = name
         self.__manager: ref[ComponentManager] | None = None
 
@@ -355,4 +355,4 @@ class ExternalRaiseManager(ComponentManager):
 
 
 if __name__ == "__main__":  # pragma: nocover
-    print(f"{__title__}\nProgrammed by {__author__}.")
+    print(f"{__title__}\nProgrammed by {__author__}.\n")

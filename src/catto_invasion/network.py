@@ -25,11 +25,11 @@ __license__ = "GNU General Public License Version 3"
 __version__ = "0.0.0"
 
 
-from collections.abc import Iterable
 from typing import (
     TYPE_CHECKING,
     Any,
     AnyStr,
+    Generic,
     Literal,
     NoReturn,
     SupportsIndex,
@@ -43,14 +43,21 @@ from catto_invasion.base_io import (
     BaseAsyncWriter,
     StructFormat,
 )
-from catto_invasion.component import Component, ComponentManager, Event
+from catto_invasion.component import (
+    Component,
+    ComponentManager,
+    Event,
+)
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
     from types import TracebackType
 
     from typing_extensions import Self
 
-BytesConvertable: TypeAlias = SupportsIndex | Iterable[SupportsIndex]
+    BytesConvertable: TypeAlias = SupportsIndex | Iterable[SupportsIndex]
+else:
+    BytesConvertable = Generic
 
 
 class NetworkTimeoutError(Exception):
