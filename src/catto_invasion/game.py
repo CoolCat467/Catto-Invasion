@@ -53,6 +53,7 @@ from catto_invasion.component import (
     Event,
     ExternalRaiseManager,
 )
+from catto_invasion.hyphenate import hyphenate_word
 from catto_invasion.objects import Button, OutlinedText
 from catto_invasion.statemachine import AsyncState
 from catto_invasion.vector import Vector2
@@ -216,13 +217,19 @@ def text_with_delays(text: str) -> Generator[tuple[str, int], None, None]:
     short_wait = set(" ")
     long_wait = set(",.?!")
 
-    for char in text:
-        if char in short_wait:
-            yield char, 0
-        elif char in long_wait:
-            yield char, 2
-        else:
-            yield char, 1
+    words = text.split(" ")
+    for idx, word in enumerate(words):
+        parts = hyphenate_word(word)
+        for part in parts:
+            for char in part:
+                if char in short_wait:
+                    yield char, 0
+                elif char in long_wait:
+                    yield char, 2
+                else:
+                    yield char, 1
+        if idx < (len(words) - 1):
+            yield " ", 0
 
 
 class Speaker(sprite.Sprite):
