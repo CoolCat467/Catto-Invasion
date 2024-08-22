@@ -56,10 +56,16 @@ catto_invasion = ["py.typed", "data/*"]
 [tool.mypy]
 mypy_path = "src"
 check_untyped_defs = true
+disallow_any_decorated = true
 disallow_any_generics = true
+disallow_any_unimported = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
 disallow_untyped_calls = true
+disallow_untyped_decorators = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
+local_partial_types = true
 no_implicit_optional = true
 no_implicit_reexport = true
 show_column_numbers = true
@@ -77,7 +83,7 @@ warn_unused_ignores = true
 combine-as-imports = true
 
 [tool.codespell]
-ignore-words-list = 'astroid,crasher,asend,Ned'
+ignore-words-list = "astroid,crasher,asend,Ned"
 
 [tool.pycln]
 all = true
@@ -117,7 +123,6 @@ select = [
     "SIM",   # flake8-simplify
     "SLOT",  # flake8-slots
     "TCH",   # flake8-type-checking
-    "TRIO",  # flake8-trio
     "UP",    # pyupgrade
     "W",     # Warning
     "YTT",   # flake8-2020
