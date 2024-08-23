@@ -679,7 +679,7 @@ class GroupProcessor(AsyncStateMachine):
 
     __slots__ = ("groups", "group_names", "new_gid", "_timing", "_clear")
     sub_renderer_class: ClassVar = LayeredDirty
-    groups: dict[int, sub_renderer_class]
+    groups: dict[int, sub_renderer_class]  # type: ignore[no-any-unimported]
 
     def __init__(self) -> None:
         """Initialize group processor."""
@@ -726,7 +726,7 @@ class GroupProcessor(AsyncStateMachine):
                     del self.group_names[name]
                     return
 
-    def get_group(self, gid_name: str | int) -> sub_renderer_class | None:
+    def get_group(self, gid_name: str | int) -> sub_renderer_class | None:  # type: ignore[no-any-unimported]
         """Return group from group ID or name."""
         named = None
         if isinstance(gid_name, str):

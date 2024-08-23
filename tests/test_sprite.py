@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import pytest
 import trio
+from pygame.rect import Rect
+from pygame.surface import Surface
+
 from catto_invasion.component import Event
 from catto_invasion.sprite import (
     AnimationComponent,
@@ -15,38 +18,36 @@ from catto_invasion.sprite import (
     TickEventData,
 )
 from catto_invasion.vector import Vector2
-from pygame.rect import Rect
-from pygame.surface import Surface
 
 
-@pytest.fixture()
+@pytest.fixture
 def sprite() -> Sprite:
     return Sprite("test_sprite")
 
 
-@pytest.fixture()
+@pytest.fixture
 def image_component(sprite: Sprite) -> ImageComponent:
     sprite.add_component(ImageComponent())
     return sprite.get_component("image")
 
 
-@pytest.fixture()
+@pytest.fixture
 def animation_component(image_component: ImageComponent) -> AnimationComponent:
     return image_component.get_component("animation")
 
 
-@pytest.fixture()
+@pytest.fixture
 def outline_component(image_component: ImageComponent) -> OutlineComponent:
     return image_component.get_component("outline")
 
 
-@pytest.fixture()
+@pytest.fixture
 def movement_component(sprite: Sprite) -> MovementComponent:
     sprite.add_component(MovementComponent())
     return sprite.get_component("movement")
 
 
-@pytest.fixture()
+@pytest.fixture
 def targeting_component(
     movement_component: MovementComponent,
 ) -> TargetingComponent:
@@ -55,12 +56,12 @@ def targeting_component(
     return sprite.get_component("targeting")
 
 
-@pytest.fixture()
+@pytest.fixture
 def drag_click_event_component() -> DragClickEventComponent:
     return DragClickEventComponent()
 
 
-@pytest.fixture()
+@pytest.fixture
 def group_processor() -> GroupProcessor:
     return GroupProcessor()
 
@@ -211,7 +212,7 @@ def test_targeting_component_update_heading(
     )
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_targeting_component_move_destination_time(
     targeting_component: TargetingComponent,
 ) -> None:
@@ -241,7 +242,7 @@ def test_group_processor_new_group(group_processor: GroupProcessor) -> None:
     assert "test_group" in group_processor.group_names
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_animation_component_tick(
     animation_component: AnimationComponent,
 ) -> None:

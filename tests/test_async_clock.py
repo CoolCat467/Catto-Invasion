@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import pytest
+
 from catto_invasion.async_clock import Clock
 
 
-@pytest.fixture()
+@pytest.fixture
 def clock() -> Clock:
     return Clock()
 
@@ -26,7 +27,7 @@ def test_get_time(clock: Clock) -> None:
     assert clock.get_time() == 0
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_tick_elasped(clock: Clock) -> None:
     time_passed = await clock.tick()
     assert time_passed >= 0
@@ -40,7 +41,7 @@ async def test_tick_elasped(clock: Clock) -> None:
     assert time_passed >= 0
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_tick(clock: Clock) -> None:
     await clock.tick(60)
     result = await clock.tick(60)
@@ -52,7 +53,7 @@ async def test_tick(clock: Clock) -> None:
     assert isinstance(clock.get_time(), int)
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_tick_fps(clock: Clock) -> None:
     for _ in range(20):
         await clock.tick(60)

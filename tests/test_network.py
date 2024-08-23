@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 import pytest
 import trio
 import trio.testing
+
 from catto_invasion.component import Event
 from catto_invasion.network import (
     NetworkComponent,
@@ -19,7 +20,7 @@ if TYPE_CHECKING:
 pytest_plugins = ("pytest_trio",)
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def client_connect(port: int, stop_server: Callable[[], None]) -> None:
     await trio.sleep(0.05)
     # manager = ComponentManager("manager")
@@ -46,7 +47,7 @@ async def client_connect(port: int, stop_server: Callable[[], None]) -> None:
     stop_server()
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def run_async() -> None:
     class TestServer(Server):
         async def handler(self, stream: trio.SocketStream) -> None:
@@ -66,13 +67,13 @@ async def run_async() -> None:
         nursery.start_soon(client_connect, port, server.stop_serving)
 
 
-@pytest.fixture()
+@pytest.fixture
 async def network_component() -> Generator[NetworkComponent, None, None]:
     async with NetworkComponent("TestComponent") as component:
         yield component
 
 
-@pytest.fixture()
+@pytest.fixture
 def memory_stream_oneway_network_components() -> (
     Generator[tuple[NetworkEventComponent, NetworkEventComponent], None, None]
 ):
@@ -84,7 +85,7 @@ def memory_stream_oneway_network_components() -> (
     recv.close()
 
 
-@pytest.fixture()
+@pytest.fixture
 async def network_event_component() -> (
     Generator[NetworkEventComponent, None, None]
 ):
@@ -92,7 +93,7 @@ async def network_event_component() -> (
         yield component
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_component_connect(
     memory_stream_oneway_network_components: tuple[
         NetworkEventComponent,
@@ -104,7 +105,7 @@ async def test_network_component_connect(
     assert not recv_component.not_connected
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_not_connected_access(
     network_component: NetworkComponent,
 ) -> None:
@@ -112,7 +113,7 @@ async def test_not_connected_access(
         _ = network_component.stream
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_component_read_write(
     memory_stream_oneway_network_components: tuple[
         NetworkEventComponent,
@@ -126,7 +127,7 @@ async def test_network_component_read_write(
     assert data_read == data_to_write
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_event_component_register_write_event(
     network_event_component: NetworkEventComponent,
 ) -> None:
@@ -136,7 +137,7 @@ async def test_network_event_component_register_write_event(
     )
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_event_component_register_write_event_failure(
     network_event_component: NetworkEventComponent,
 ) -> None:
@@ -148,7 +149,7 @@ async def test_network_event_component_register_write_event_failure(
         network_event_component.register_network_write_event("TestEvent", 1)
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_event_component_register_read_event_failure(
     network_event_component: NetworkEventComponent,
 ) -> None:
@@ -162,7 +163,7 @@ async def test_network_event_component_register_read_event_failure(
         network_event_component.register_network_write_event("TestEvent", 1)
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_event_component_write_read_event(
     memory_stream_oneway_network_components: tuple[
         NetworkEventComponent,
@@ -186,7 +187,7 @@ def test_network_timeout_error() -> None:
         raise NetworkTimeoutError("Test Timeout Error")
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_component_connect_error(
     memory_stream_oneway_network_components: tuple[
         NetworkEventComponent,
@@ -200,7 +201,7 @@ async def test_network_component_connect_error(
         await recv_component.connect("localhost", 80)
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_component_read_failure_timeout(
     memory_stream_oneway_network_components: tuple[
         NetworkEventComponent,
@@ -217,7 +218,7 @@ async def test_network_component_read_failure_timeout(
         await recv_component.read(1)
 
 
-@pytest.mark.trio()
+@pytest.mark.trio
 async def test_network_component_read_partial_response_failure(
     memory_stream_oneway_network_components: tuple[
         NetworkEventComponent,

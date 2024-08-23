@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import pytest
-from catto_invasion.objects import Button, OutlinedText, Text
 from pygame.surface import Surface
+
+from catto_invasion.objects import Button, OutlinedText, Text
 
 
 class MockSurface(Surface):
@@ -30,7 +31,7 @@ class MockFont:
         return MockSurface(text)
 
 
-@pytest.fixture()
+@pytest.fixture
 def font() -> MockFont:
     return MockFont()
 
