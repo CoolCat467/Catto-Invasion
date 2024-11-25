@@ -28,7 +28,7 @@ __version__ = "1.0.20070709"
 class Hyphenator:
     """Hyphenator class."""
 
-    __slots__ = ("tree", "exceptions")
+    __slots__ = ("exceptions", "tree")
 
     def __init__(self, patterns: str, exceptions: str = "") -> None:
         """Initialize Hyphenator."""

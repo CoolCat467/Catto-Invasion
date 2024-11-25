@@ -2,27 +2,28 @@
 
 # Programmed by CoolCat467
 
+from __future__ import annotations
+
 # Copyright (C) 2023  CoolCat467
 #
-#     This program is free software: you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation, either version 3 of the License, or
-#     (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#     You should have received a copy of the GNU General Public License
-#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-from __future__ import annotations
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 __title__ = "Objects"
 __author__ = "CoolCat467"
 __license__ = "GNU General Public License Version 3"
 __version__ = "0.0.0"
+
 
 from typing import TYPE_CHECKING
 
@@ -34,9 +35,8 @@ from pygame.surface import Surface
 from catto_invasion import sprite
 
 if TYPE_CHECKING:
+    from libcomponent.component import Event
     from pygame.font import Font
-
-    from catto_invasion.component import Event
 
 
 class Text(sprite.Sprite):
@@ -52,7 +52,7 @@ class Text(sprite.Sprite):
 
     __slots__ = ("__text", "font")
 
-    def __init__(self, name: str, font: Font) -> None:
+    def __init__(self, name: object, font: Font) -> None:
         """Initialize with font. Defaults to white text."""
         super().__init__(name)
 
@@ -129,12 +129,12 @@ class OutlinedText(Text):
 
     """
 
-    __slots__ = ("outline", "inside")
+    __slots__ = ("inside", "outline")
 
     border_width = 3
     border_radius = 8
 
-    def __init__(self, name: str, font: Font) -> None:
+    def __init__(self, name: object, font: Font) -> None:
         """Initialize with name and font."""
         super().__init__(name, font)
 
@@ -195,7 +195,7 @@ class Button(OutlinedText):
 
     __slots__ = ()
 
-    def __init__(self, name: str, font: Font) -> None:
+    def __init__(self, name: object, font: Font) -> None:
         """Initialize with name and font."""
         super().__init__(name, font)
 

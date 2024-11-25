@@ -41,18 +41,18 @@ from typing import (
 
 import pygame
 import trio
+from libcomponent.component import (
+    Component,
+    ComponentManager,
+    Event,
+    ExternalRaiseManager,
+)
 from pygame.color import Color
 from pygame.locals import K_ESCAPE, KEYUP, QUIT, RESIZABLE, WINDOWRESIZED
 from pygame.rect import Rect
 
 from catto_invasion import objects, sprite
 from catto_invasion.async_clock import Clock
-from catto_invasion.component import (
-    Component,
-    ComponentManager,
-    Event,
-    ExternalRaiseManager,
-)
 from catto_invasion.hyphenate import hyphenate_word
 from catto_invasion.objects import Button, OutlinedText
 from catto_invasion.statemachine import AsyncState
@@ -565,7 +565,7 @@ class Record(NamedTuple):
 class PlayState(GameState):
     """Game Play State."""
 
-    __slots__ = ("position", "db")
+    __slots__ = ("db", "position")
 
     def __init__(self) -> None:
         """Initialize Title State."""

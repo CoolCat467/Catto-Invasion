@@ -1,14 +1,12 @@
 ci:
-  autofix_commit_msg: "[pre-commit.ci] auto fixes from pre-commit.com hooks"
   autofix_prs: true
-  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: quarterly
   submodules: false
-  skip: [badgie]
+  skip: [badgie, project-requirements]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -20,30 +18,29 @@ repos:
       - id: check-case-conflict
       - id: sort-simple-yaml
         files: .pre-commit-config.yaml
-  - repo: https://github.com/hadialqattan/pycln
-    rev: v2.4.0
-    hooks:
-      - id: pycln
-        args: [--config=pyproject.toml, src]
-        types: [file]
-        types_or: [python, pyi]
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 24.8.0
+    rev: 24.10.0
     hooks:
       - id: black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.2
+    rev: v0.8.0
     hooks:
       - id: ruff
         types: [file]
         types_or: [python, pyi, toml]
   - repo: https://github.com/CoolCat467/badgie
-    rev: v0.9.5
+    rev: v0.9.6
     hooks:
       - id: badgie
   - repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:
       - id: codespell
-        additional_dependencies:
-          - tomli
+  - repo: local
+    hooks:
+      - id: project-requirements
+        name: regenerate requirements.in
+        language: system
+        entry: python tools/project_requirements.py
+        pass_filenames: false
+        files: ^(test-requirements.in)|(pyproject.toml)$

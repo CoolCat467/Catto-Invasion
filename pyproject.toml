@@ -34,10 +34,10 @@ classifiers = [
 ]
 keywords = []
 dependencies = [
+    "libcomponent~=0.0.0",
     "pygame~=2.6.0",
     "typing_extensions",
     "trio~=0.27.0",
-    "cryptography",
 ]
 
 [tool.setuptools.dynamic]
@@ -54,7 +54,7 @@ catto_invasion_game = "catto_invasion.game:cli_run"
 catto_invasion = ["py.typed", "data/*"]
 
 [tool.mypy]
-mypy_path = "src"
+files = ["src/catto_invasion/",]
 check_untyped_defs = true
 disallow_any_decorated = true
 disallow_any_generics = true
@@ -91,7 +91,6 @@ disable_all_dunder_policy = true
 
 [tool.black]
 line-length = 79
-target-version = ['py312']
 
 [tool.ruff]
 line-length = 79
@@ -111,12 +110,16 @@ select = [
     "EXE",   # flake8-executable
     "F",     # pyflakes
     "FA",    # flake8-future-annotations
+    "FLY",   # flynt
+    "FURB",  # refurb
     "I",     # isort
+    "ICN",   # flake8-import-conventions
     "N",     # pep8-naming
     "PIE",   # flake8-pie
     "PT",    # flake8-pytest-style
     "PYI",   # flake8-pyi
     "Q",     # flake8-quotes
+    "R",     # Refactor
     "RET",   # flake8-return
     "RUF",   # Ruff-specific rules
     "S",     # flake8-bandit
@@ -132,9 +135,10 @@ extend-ignore = [
     "D204",   # one-blank-line-after-class
     "D211",   # no-blank-line-before-class
     "D213",   # multi-line-summary-second-line
-    "D417",   # undocumented-param
+    "D417",   # undocumented-param "Missing argument descriptions"
     "E501",   # line-too-long
-    "S101",   # undocumented-param
+    "PYI041", # redundant-numeric-union
+    "S101",   # assert (use of assert for tests and type narrowing)
     "SIM117", # multiple-with-statements
 ]
 
@@ -146,14 +150,14 @@ extend-ignore = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov-report term-missing --cov=catto_invasion"
+addopts = "--cov-report=xml --cov-report term-missing --cov=catto_invasion"
 testpaths = [
     "tests",
 ]
 
 [tool.coverage.run]
 branch = true
-source = ["src"]
+source_pkgs = ["catto_invasion"]
 omit = [
     "__init__.py",
 ]
@@ -180,32 +184,3 @@ partial_branches = [
     "if .* or not _t.TYPE_CHECKING:",
     "if .* or not t.TYPE_CHECKING:",
 ]
-
-[tool.tox]
-legacy_tox_ini = """
-    [tox]
-    envlist = py310, py311, py312, pytest, mypy
-    isolated_build = false
-
-    [gh-actions]
-    python =
-        3.10: py310, pytest
-        3.11: py311, pytest
-        3.12: py312, pytest, mypy
-
-    [testenv]
-    setenv =
-        PYTHONPATH = {toxinidir}
-
-    [testenv:pytest]
-    deps =
-        pytest
-        pytest-cov
-        pytest-trio
-    commands = pytest --basetemp={envtmpdir}
-
-    [testenv:mypy]
-    deps =
-        mypy
-    commands = mypy src
-"""

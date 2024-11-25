@@ -2,22 +2,22 @@
 
 # Programmed by CoolCat467
 
+from __future__ import annotations
+
 # Copyright (C) 2023  CoolCat467
 #
-#     This program is free software: you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation, either version 3 of the License, or
-#     (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#     You should have received a copy of the GNU General Public License
-#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-from __future__ import annotations
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 __title__ = "Client Sprite"
 __author__ = "CoolCat467"
@@ -27,6 +27,7 @@ __version__ = "0.0.0"
 from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, TypedDict, cast
 
 import trio
+from libcomponent.component import Component, ComponentManager, Event
 from pygame.color import Color
 from pygame.event import Event as PygameEvent, event_name
 from pygame.mask import Mask, from_surface as mask_from_surface
@@ -34,7 +35,6 @@ from pygame.rect import Rect
 from pygame.sprite import LayeredDirty, LayeredUpdates, WeakDirtySprite
 from pygame.surface import Surface
 
-from catto_invasion.component import Component, ComponentManager, Event
 from catto_invasion.statemachine import AsyncStateMachine
 from catto_invasion.vector import Vector2
 
@@ -71,11 +71,11 @@ class PygameMouseMotion(PygameMouseEventData):
 
 
 class Sprite(ComponentManager, WeakDirtySprite):
-    """Client dirty sprite component manager."""
+    """Client sprite component."""
 
-    __slots__ = ("rect", "__image", "mask", "update_location_on_resize")
+    __slots__ = ("__image", "mask", "rect", "update_location_on_resize")
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: object) -> None:
         """Initialize with name."""
         ComponentManager.__init__(self, name, "sprite")
         WeakDirtySprite.__init__(self)
@@ -95,9 +95,13 @@ class Sprite(ComponentManager, WeakDirtySprite):
         """Return rect center as new Vector2."""
         return Vector2.from_iter(self.rect.center)
 
-    def __set_location(self, value: tuple[int, int]) -> None:
+    def _set_location(self, value: tuple[int, int]) -> None:
         """Set rect center from tuple of integers."""
         self.rect.center = value
+
+    def __set_location(self, value: tuple[int, int]) -> None:
+        """Set rect center from tuple of integers."""
+        self._set_location(value)
 
     location = property(
         __get_location,
@@ -168,7 +172,7 @@ class ImageComponent(ComponentManager):
 
     """
 
-    __slots__ = ("__surfaces", "__masks", "set_surface", "mask_threshold")
+    __slots__ = ("__masks", "__surfaces", "mask_threshold", "set_surface")
 
     def __init__(self) -> None:
         """Initialize image component."""
@@ -340,12 +344,12 @@ class OutlineComponent(Component):
 
         radius = abs(self.size)
         diameter = radius * 2
-        ##        if self.size < 0:
-        ##            surface = surface_scale(
-        ##                surface, (w - diameter, h - diameter)
-        ##            )
-        ##            offset = 0
-        ##        else:
+        # if self.size < 0:
+        # surface = surface_scale(
+        # surface, (w - diameter, h - diameter)
+        # )
+        # offset = 0
+        # else:
         offset = diameter
         surf = Surface((w + offset, h + offset)).convert_alpha()
         surf.fill(Color(0, 0, 0, 0))
@@ -425,7 +429,7 @@ class AnimationComponent(Component):
         await trio.lowlevel.checkpoint()
 
         passed = tick_event.data.time_passed
-        new = None
+        new: int | str | None = None
         if self.update_every == 0:
             new = self.fetch_controller_new_state()
         else:
@@ -497,6 +501,9 @@ class MovementComponent(Component):
 class TargetingComponent(Component):
     """Sprite that moves toward a destination and then stops.
 
+    Registered Component Name:
+        targeting
+
     Requires components:
         Sprite
         MovementComponent
@@ -521,10 +528,12 @@ class TargetingComponent(Component):
     def update_heading(self) -> None:
         """Update the heading of the movement component."""
         movement = cast(MovementComponent, self.get_component("movement"))
-        if self.to_destination == (0, 0):
+        to_dest = self.to_destination()
+        # If magnitude is zero
+        if to_dest @ to_dest == 0:
             movement.heading = Vector2(0, 0)
             return
-        movement.heading = self.to_destination.normalized()
+        movement.heading = to_dest.normalized()
 
     def __set_destination(self, value: Iterable[int]) -> None:
         """Set destination as well as movement heading."""
@@ -542,27 +551,15 @@ class TargetingComponent(Component):
         doc="Target Destination",
     )
 
-    @property
     def to_destination(self) -> Vector2:
         """Return vector of self.location to self.destination."""
         sprite = cast(Sprite, self.get_component("sprite"))
         return Vector2.from_points(sprite.location, self.destination)
 
-    def estimated_eta(self) -> float:
-        """Return estimated time of arrival (in time_passed)."""
-        if self.__reached:
-            return 0.0
-
-        movement = cast(MovementComponent, self.get_component("movement"))
-
-        if movement.speed <= 0:
-            return float("inf")
-
-        return self.to_destination.magnitude() / movement.speed
-
     async def move_destination_time(self, time_passed: float) -> None:
         """Move with time_passed."""
         if self.__reached:
+            await trio.lowlevel.checkpoint()
             return
 
         sprite, movement = cast(
@@ -574,16 +571,33 @@ class TargetingComponent(Component):
             self.__reached = True
             await self.raise_event(Event(self.event_raise_name, None))
             return
-        await trio.lowlevel.checkpoint()
 
+        to_destination = self.to_destination()
         travel_distance = min(
-            self.to_destination.magnitude(),
+            to_destination @ to_destination,
             movement.speed * time_passed,
         )
 
         if travel_distance > 0:
             movement.move_heading_distance(travel_distance)
-            self.update_heading()  # Fix imprecision
+        # Fix imprecision
+        self.update_heading()
+        await trio.lowlevel.checkpoint()
+
+    async def move_destination_time_ticks(
+        self,
+        event: Event[TickEventData],
+    ) -> None:
+        """Move with tick data."""
+        await self.move_destination_time(event.data.time_passed)
+
+
+class DragEvent(NamedTuple):
+    """Drag event data."""
+
+    pos: tuple[int, int]
+    rel: tuple[int, int]
+    button: int
 
 
 class DragClickEventComponent(Component):
@@ -665,11 +679,11 @@ class DragClickEventComponent(Component):
                     self.raise_event,
                     Event(
                         "drag",
-                        {
-                            "pos": event.data["pos"],
-                            "rel": event.data["rel"],
-                            "button": button,
-                        },
+                        DragEvent(
+                            event.data["pos"],
+                            event.data["rel"],
+                            button,
+                        ),
                     ),
                 )
 
@@ -677,15 +691,14 @@ class DragClickEventComponent(Component):
 class GroupProcessor(AsyncStateMachine):
     """Layered Dirty Sprite group handler."""
 
-    __slots__ = ("groups", "group_names", "new_gid", "_timing", "_clear")
+    __slots__ = ("_clear", "_timing", "group_names", "groups", "new_gid")
     sub_renderer_class: ClassVar = LayeredDirty
-    groups: dict[int, sub_renderer_class]  # type: ignore[no-any-unimported]
 
     def __init__(self) -> None:
         """Initialize group processor."""
         super().__init__()
 
-        self.groups = {}
+        self.groups: dict[int, LayeredDirty[Sprite]] = {}
         self.group_names: dict[str, int] = {}
         self.new_gid = 0
         self._timing = 1000 / 80
@@ -703,16 +716,27 @@ class GroupProcessor(AsyncStateMachine):
         for renderer in self.groups.values():
             renderer.set_timing_threshold(self._timing)
 
-    def new_group(self, name: str | None = None) -> int:
-        """Make a new group and return id."""
+    def new_group_class(
+        self,
+        group_class: type[LayeredDirty[Any]],
+        name: str | None = None,
+    ) -> int:
+        """Make a new group from given group class and return id."""
         if name is not None:
             self.group_names[name] = self.new_gid
-        self.groups[self.new_gid] = self.sub_renderer_class()
-        self.groups[self.new_gid].set_timing_threshold(self._timing)
-        if self._clear[1] is not None:
-            self.groups[self.new_gid].clear(*self._clear)
+        group_instance = group_class()
+        self.groups[self.new_gid] = group_instance
+        group_instance.set_timing_threshold(self._timing)
+        screen, background = self._clear
+        if background is not None:
+            assert screen is not None
+            group_instance.clear(screen, background)
         self.new_gid += 1
         return self.new_gid - 1
+
+    def new_group(self, name: str | None = None) -> int:
+        """Make a new group and return id."""
+        return self.new_group_class(self.sub_renderer_class, name)
 
     def remove_group(self, gid: int) -> None:
         """Remove group."""
@@ -726,7 +750,7 @@ class GroupProcessor(AsyncStateMachine):
                     del self.group_names[name]
                     return
 
-    def get_group(self, gid_name: str | int) -> sub_renderer_class | None:  # type: ignore[no-any-unimported]
+    def get_group(self, gid_name: str | int) -> LayeredDirty[Sprite] | None:
         """Return group from group ID or name."""
         named = None
         if isinstance(gid_name, str):
@@ -737,6 +761,9 @@ class GroupProcessor(AsyncStateMachine):
             group_id = gid_name
         if group_id in self.groups:
             return self.groups[group_id]
+        # Erase old named group that is not in groups anymore.
+        # Not sure how that would happen, pretty weird this is here
+        # to be honest (comment written months/years later).
         if named is not None:
             del self.group_names[named]
         return None
@@ -773,4 +800,4 @@ def convert_pygame_event(event: PygameEvent) -> Event[Any]:
 
 
 if __name__ == "__main__":  # pragma: nocover
-    print(f"{__title__}\nProgrammed by {__author__}.\n")
+    print(f"{__title__}\nProgrammed by {__author__}.")

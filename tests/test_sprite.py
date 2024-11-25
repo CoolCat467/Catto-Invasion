@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import pytest
 import trio
+from libcomponent.component import Event
 from pygame.rect import Rect
 from pygame.surface import Surface
 
-from catto_invasion.component import Event
 from catto_invasion.sprite import (
     AnimationComponent,
     DragClickEventComponent,
@@ -206,7 +206,7 @@ def test_targeting_component_update_heading(
 ) -> None:
     targeting_component.destination = Vector2(10, 20)
     targeting_component.update_heading()
-    assert targeting_component.to_destination == Vector2.from_points(
+    assert targeting_component.to_destination() == Vector2.from_points(
         (0, 0),
         (10, 20),
     )
@@ -219,9 +219,9 @@ async def test_targeting_component_move_destination_time(
     movement_component = targeting_component.get_component("movement")
     movement_component.speed = 1
     targeting_component.destination = Vector2(10, 20)
-    current_distance = targeting_component.to_destination.magnitude()
+    current_distance = targeting_component.to_destination().magnitude()
     await targeting_component.move_destination_time(1)
-    assert targeting_component.to_destination.magnitude() < current_distance
+    assert targeting_component.to_destination().magnitude() < current_distance
 
 
 def test_drag_click_event_component_init(
