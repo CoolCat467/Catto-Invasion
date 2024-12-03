@@ -160,7 +160,7 @@ class ImageComponent(ComponentManager):
     """Allow sprite to use multiple images easily.
 
     Components Supplied:
-        AnimationComponent
+        # AnimationComponent
         OutlineComponent
 
     Requires Component:
@@ -186,7 +186,7 @@ class ImageComponent(ComponentManager):
 
         self.add_components(
             (
-                AnimationComponent(),
+                # AnimationComponent(),
                 OutlineComponent(),
             ),
         )
@@ -253,7 +253,7 @@ class ImageComponent(ComponentManager):
         while True:
             if not self.image_exists(identifier):
                 raise ValueError(
-                    f'No image saved for identifier "{identifier}"',
+                    f'No mask saved for identifier "{identifier}"',
                 )
             mask = self.__masks[identifier]
             if isinstance(mask, Mask):
@@ -597,7 +597,7 @@ class DragEvent(NamedTuple):
 
     pos: tuple[int, int]
     rel: tuple[int, int]
-    button: int
+    buttons: dict[int, bool]
 
 
 class DragClickEventComponent(Component):
@@ -672,20 +672,17 @@ class DragClickEventComponent(Component):
         if not self.manager_exists:
             return
         async with trio.open_nursery() as nursery:
-            for button, pressed in self.pressed.items():
-                if not pressed:
-                    continue
-                nursery.start_soon(
-                    self.raise_event,
-                    Event(
-                        "drag",
-                        DragEvent(
-                            event.data["pos"],
-                            event.data["rel"],
-                            button,
-                        ),
+            nursery.start_soon(
+                self.raise_event,
+                Event(
+                    "drag",
+                    DragEvent(
+                        event.data["pos"],
+                        event.data["rel"],
+                        self.pressed,
                     ),
-                )
+                ),
+            )
 
 
 class GroupProcessor(AsyncStateMachine):
@@ -785,12 +782,12 @@ class GroupProcessor(AsyncStateMachine):
         for group_id in tuple(self.groups):
             self.remove_group(group_id)
 
-    def __del__(self) -> None:
+    def __del__(self) -> None:  # pragma: nocover
         """Clear groups."""
         self.clear_groups()
 
 
-def convert_pygame_event(event: PygameEvent) -> Event[Any]:
+def convert_pygame_event(event: PygameEvent) -> Event[Any]:  # pragma: nocover
     """Convert Pygame Event to Component Event."""
     # data = event.dict
     # data['type_int'] = event.type

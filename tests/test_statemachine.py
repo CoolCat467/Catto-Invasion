@@ -1,7 +1,8 @@
 import gc
 
 import pytest
-from azul.statemachine import (
+
+from catto_invasion.statemachine import (
     AsyncState,
     AsyncStateMachine,
     State,
