@@ -749,7 +749,7 @@ def cli_run() -> None:
     # Make sure the game will display correctly on high DPI monitors on Windows.
 
     if IS_WINDOWS:
-        from ctypes import windll  # type: ignore
+        from ctypes import windll  # type: ignore[attr-defined,unused-ignore]
 
         with contextlib.suppress(AttributeError):
             windll.user32.SetProcessDPIAware()
