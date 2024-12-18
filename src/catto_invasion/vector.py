@@ -158,6 +158,12 @@ class BaseVector:
         """Return result of rounding self components to given number of digits."""
         return self.rounded(ndigits)
 
+    def floored(
+        self: Self,
+    ) -> Self:
+        """Return result of rounding self components to given number of digits."""
+        return self.from_iter(int(c) for c in self)
+
     def __abs__(
         self: Self,
     ) -> Self:

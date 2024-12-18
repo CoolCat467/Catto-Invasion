@@ -573,15 +573,17 @@ class TargetingComponent(Component):
             return
 
         to_destination = self.to_destination()
-        travel_distance = min(
-            to_destination @ to_destination,
-            movement.speed * time_passed,
-        )
+        dest_magnitude = to_destination.magnitude()
+        travel_distance = movement.speed * time_passed
 
         if travel_distance > 0:
-            movement.move_heading_distance(travel_distance)
-        # Fix imprecision
-        self.update_heading()
+            if travel_distance > dest_magnitude:
+                sprite.location = self.destination
+            else:
+                # Fix imprecision
+                self.update_heading()
+                if travel_distance > 0:
+                    movement.move_heading_distance(travel_distance)
         await trio.lowlevel.checkpoint()
 
     async def move_destination_time_ticks(
