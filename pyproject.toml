@@ -85,6 +85,9 @@ combine-as-imports = true
 [tool.codespell]
 ignore-words-list = "astroid,crasher,asend,Ned"
 
+[tool.typos.files]
+extend-exclude = ["src/catto_invasion/hyphenate.py"]
+
 [tool.pycln]
 all = true
 disable_all_dunder_policy = true

@@ -42,3 +42,7 @@ position = '0'
 [not_implemented.mr_floppy.events]
 mr_floppy_set_visible = false
 speaker_clicked = "cat_babushka"
+
+
+#Это моя комната.
+#This is my room.
