@@ -1,7 +1,7 @@
 # Catto-Invasion
 Catto Invasion Visual Novel
 
-[![Tests](https://github.com/CoolCat467/Catto-Invasion/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/CoolCat467/Scanner-Server/actions/workflows/tests.yml)
+[![CI](https://github.com/CoolCat467/Catto-Invasion/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CoolCat467/Scanner-Server/actions/workflows/ci.yml)
 <!-- BADGIE TIME -->
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/CoolCat467/Catto-Invasion/main.svg)](https://results.pre-commit.ci/latest/github/CoolCat467/Catto-Invasion/main)
