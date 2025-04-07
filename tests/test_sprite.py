@@ -232,7 +232,7 @@ def test_image_component_set_image_affects_sprite(
     image_component: ImageComponent,
 ) -> None:
     image = Surface((1, 1))
-    sprite = cast(Sprite, image_component.manager.get_component("sprite"))
+    sprite = cast("Sprite", image_component.manager.get_component("sprite"))
     image_component.add_image("test_image", image)
     assert sprite.image is None
     image_component.set_image("test_image")
