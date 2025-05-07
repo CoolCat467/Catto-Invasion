@@ -25,8 +25,10 @@ __license__ = "GNU General Public License Version 3"
 __version__ = "0.0.0"
 
 import contextlib
+import math
 import platform
 import sys
+import traceback
 from os import path
 from pathlib import Path
 from typing import (
@@ -52,14 +54,16 @@ from pygame.color import Color
 from pygame.locals import K_ESCAPE, KEYUP, QUIT, RESIZABLE, WINDOWRESIZED
 from pygame.rect import Rect
 
-from catto_invasion import objects, sprite
+from catto_invasion import objects, sprite, xdg_path
 from catto_invasion.hyphenate import hyphenate_word
 from catto_invasion.objects import Button, OutlinedText
+from catto_invasion.sound import SoundData, play_sound as base_play_sound
 from catto_invasion.statemachine import AsyncState
 from catto_invasion.vector import Vector2
 
 if sys.version_info < (3, 11):
     import tomli as tomllib
+    from exceptiongroup import ExceptionGroup
 else:
     import tomllib
 
@@ -76,6 +80,20 @@ SCREEN_SIZE = (640, 480)
 FPS: Final = 48
 VSYNC = True
 
+
+SOUND_LOOKUP: Final = {
+    "delete_piece": "pop.mp3",
+    "piece_move": "slide.mp3",
+    "piece_update": "ding.mp3",
+    "button_click": "select.mp3",
+    "tick": "tick.mp3",
+}
+SOUND_DATA: Final = {
+    "delete_piece": SoundData(
+        volume=50,
+    ),
+}
+
 BLACK: Final = (0, 0, 0)
 BLUE: Final = (15, 15, 255)
 GREEN: Final = (0, 255, 0)
@@ -85,6 +103,8 @@ MAGENTA: Final = (255, 0, 255)
 YELLOW: Final = (255, 255, 0)
 WHITE: Final = (255, 255, 255)
 
+CONFIG_PATH: Final = xdg_path.config_path(__title__)
+DATA_PATH: Final = xdg_path.data_path(__title__)
 
 T = TypeVar("T")
 
@@ -95,6 +115,21 @@ IS_WINDOWS: Final = platform.system() == "Windows"
 FONT_FILE = DATA_FOLDER / "unifont-15.1.05.otf"
 
 Pos: TypeAlias = tuple[int, int]
+
+
+def play_sound(
+    sound_name: str,
+) -> tuple[pygame.mixer.Sound, int | float]:
+    """Play sound effect."""
+    sound_filename = SOUND_LOOKUP.get(sound_name)
+    if sound_filename is None:
+        raise RuntimeError(f"Error: Sound with ID `{sound_name}` not found.")
+    sound_data = SOUND_DATA.get(sound_name, SoundData())
+
+    return base_play_sound(
+        DATA_FOLDER / sound_filename,
+        sound_data,
+    )
 
 
 class PygameVideoResize(TypedDict):
@@ -249,7 +284,7 @@ class Speaker(sprite.Sprite):
         self.add_component(sprite.DragClickEventComponent())
         self.add_component(WindowResizeAutoMove())
 
-        self.location = Vector2(*SCREEN_SIZE) // 2
+        self.location = (64, 64)  # Vector2(*SCREEN_SIZE) // 2
 
     def bind_handlers(self) -> None:
         """Register event handlers."""
@@ -260,20 +295,10 @@ class Speaker(sprite.Sprite):
                 f"{self.name}_wiggle": self.wiggle,
                 f"{self.name}_set_visible": self.set_visible,
                 f"{self.name}_talk": self.talk,
+                f"{self.name}_set_location": self.set_location,
                 "click": self.click,
-                "init": self.initialize,
             },
         )
-
-    async def initialize(self, event: Event[None]) -> None:
-        """Initialize textbox."""
-        group = self.groups()[-1]
-
-        text_box = TextBox()
-        self.add_component(text_box)
-
-        group.add(text_box)  # type: ignore[arg-type]
-        await trio.lowlevel.checkpoint()
 
     async def click(
         self,
@@ -286,7 +311,7 @@ class Speaker(sprite.Sprite):
 
     async def wiggle(self, event: Event[WiggleData]) -> None:
         """Handle wiggle event."""
-        self.location = Vector2(*SCREEN_SIZE) // 2
+        ##        self.location = Vector2(*SCREEN_SIZE) // 2
         self.location += event.data.wiggle
         self.dirty = 1
         await trio.sleep(event.data.wiggle_time)
@@ -296,35 +321,19 @@ class Speaker(sprite.Sprite):
     async def set_visible(self, event: Event[bool]) -> None:
         """Handle set visible event."""
         self.visible = event.data
-        if not self.visible:
-            await self.raise_event(Event("text_clear", None))
+        await self.raise_event(
+            Event("visibility_changed", (self.name, self.visible), 1),
+        )
         await trio.lowlevel.checkpoint()
 
     async def talk(self, event: Event[str]) -> None:
         """Handle talk event."""
-        await self.raise_event(Event(f"{self.name}_set_visible", True))
-        await self.raise_event(Event("text_clear", None))
-        degrees = 0
-        for char, delay_type in text_with_delays(event.data):
-            distance = {0: 0, 1: 5, 2: 10}[delay_type]
+        await self.raise_event(Event("talk", (self.name, event.data), 1))
 
-            degrees = (degrees + 65) % 360
-            await self.raise_event(Event("text_add", (char, delay_type != 0)))
-            wiggle = Vector2.from_degrees(degrees, distance)
-            wiggle_delay = {0: 0.1, 1: 0.1, 2: 0.3}[delay_type]
-            await self.raise_event(
-                Event(
-                    f"{self.name}_wiggle",
-                    WiggleData(
-                        wiggle,
-                        wiggle_delay,  # event.data.typewriter_delay
-                    ),
-                ),
-            )
-            ##            await trio.sleep(event.data.typewriter_delay)
-
-
-##            await trio.sleep(0.005)
+    async def set_location(self, event: Event[Vector2]) -> None:
+        """Handle set location event."""
+        self.location = event.data
+        self.dirty = 1
 
 
 class FPSCounter(objects.Text):
@@ -402,6 +411,7 @@ class GameState(AsyncState["CattoClient"]):
         assert self.machine is not None
         self.machine.remove_group(self.id)
         self.manager.unbind_components()
+        self.id = 0
         await trio.lowlevel.checkpoint()
 
     def change_state(
@@ -411,6 +421,7 @@ class GameState(AsyncState["CattoClient"]):
         """Return an async function that will change state to `new_state`."""
 
         async def set_state(*args: object, **kwargs: object) -> None:
+            play_sound("button_click")
             await self.machine.set_state(new_state)
 
         return set_state
@@ -562,14 +573,73 @@ class Record(NamedTuple):
     events: dict[str, str]
 
 
+class Stage:
+    """Stage class, keep track of active character positions."""
+
+    __slots__ = (
+        "order",
+        "positions",
+    )
+
+    def __init__(self) -> None:
+        """Initialize stage."""
+        self.order: list[str] = []
+        self.positions: list[Vector2] = []
+
+    @property
+    def active_count(self) -> int:
+        """Active character count."""
+        return len(self.order)
+
+    def reorder(self) -> None:
+        """Reorder active character positions."""
+        self.positions.clear()
+        for index in range(self.active_count):
+            current = Vector2(index, 0)
+            self.positions.append(current)
+
+    def get_positions(self) -> zip[tuple[str, Vector2]]:
+        """Return zip object of character names and locations."""
+        return zip(self.order, self.positions, strict=True)
+
+    def character_enter(self, name: str) -> bool:
+        """Character enters stage handler. Return if updated."""
+        if name not in self.order:
+            self.order.append(name)
+            self.reorder()
+            return True
+        return False
+
+    def character_leave(self, name: str) -> bool:
+        """Character leaves stage handler. Return if updated."""
+        if name in self.order:
+            self.order.remove(name)
+            self.reorder()
+            return True
+        return False
+
+
 class PlayState(GameState):
     """Game Play State."""
 
-    __slots__ = ("db", "position")
+    __slots__ = (
+        "db",
+        "position",
+        "stage",
+        "talking",
+        "talking_needs_cancel",
+        "visited",
+    )
 
     def __init__(self) -> None:
         """Initialize Title State."""
         super().__init__("play")
+
+        self.position = "start"
+        self.visited: dict[str, set[str]] = {}
+        self.talking = trio.Lock()
+        self.talking_needs_cancel = False
+        self.stage = Stage()
 
         with open(DATA_FOLDER / "database.toml", "rb") as fp:
             self.db = tomllib.load(fp)
@@ -578,7 +648,11 @@ class PlayState(GameState):
         """Register event handlers."""
         self.manager.register_handlers(
             {
+                "load_speakers": self.handle_load_speakers,
+                "goto": self.handle_goto,
+                "talk": self.handle_talk,
                 "speaker_clicked": self.handle_speaker_clicked,
+                "visibility_changed": self.handle_visibility_changed,
             },
         )
 
@@ -587,43 +661,188 @@ class PlayState(GameState):
         super().add_actions()
         self.register_handlers()
 
+    async def handle_load_speakers(self, event: Event[list[str]]) -> None:
+        """Handle load speaker(s) event."""
+        speakers = event.data
+        for speaker_name in speakers:
+            if not self.manager.component_exists(speaker_name):
+                self.group_add(Speaker(speaker_name))
+
+    async def handle_goto(self, event: Event[str]) -> None:
+        """Handle goto new position event."""
+        new_state = event.data
+        self.visited.setdefault(self.position, set())
+        self.visited[self.position].add(new_state)
+        self.position = new_state
+        await self.handle_position()
+
+    async def handle_record(self, record: dict[str, Any]) -> None:
+        """Handle database record."""
+        ##print(f"[handle_record] {record = }")
+        events = record.get("events", {})
+        for event_name, event_data in events.items():
+            event = Event(event_name, event_data)
+            ##print(f"[handle_record] {event = }")
+            await self.manager.raise_event(event)
+
+    async def handle_position(self) -> None:
+        """Handle position change."""
+        ##print(f"[handle_position] {self.position = }")
+        record = self.db[self.position]
+        await self.handle_record(record)
+
     async def entry_actions(self) -> None:
         """Add GameBoard and raise init event."""
         assert self.machine is not None
         if self.id == 0:
             self.id = self.machine.new_group("play")
 
-        # self.group_add(())
-
-        self.group_add(Speaker("cat_babushka"))
-        self.group_add(Speaker("cat_supreme"))
-        self.group_add(Speaker("cat_officer"))
-        self.group_add(Speaker("mr_floppy"))
-
         self.group_add(FPSCounter())
+        self.group_add(TextBox())
 
-        self.position = "start"
+        await self.handle_position()
 
-        await self.machine.raise_event(Event("init", None))
+    async def update_character_positions(self) -> None:
+        """Update character positions."""
+        print("[update_character_positions]")
+        ##screen_width = SCREEN_SIZE[0]
+        ##padding = screen_width // 6
+        ##working_area = screen_width - (padding * 2)
+        ##spacing = working_area // max(self.stage.active_count, 1)
+        ##y = SCREEN_SIZE[1] // 2
+        ##async with trio.open_nursery() as nursery:
+        ##    for character, raw_position in self.stage.get_positions():
+        ##        position = (raw_position * spacing) + (padding, y)
+        ##        print(f'{character} {position = }')
+        ##        await self.manager.raise_event_in_nursery(
+        ##            Event(f"{character}_set_location", position),
+        ##            nursery,
+        ##        )
+        screen_width = SCREEN_SIZE[0]
+        center = Vector2.from_iter(SCREEN_SIZE) // 2
+        padding = screen_width // 6
+        working_width = screen_width - (padding * 2)
 
-        results = self.db[self.position]
-        record = Record(position=results["position"], events=results["events"])
+        half_width = working_width // 2
+        d = 30
 
-        await self.handle_record(record)
+        radius = (((half_width * half_width) // d) + d) // 2
+        print(f"{radius = }")
+        circle_center = center + Vector2(0, radius) - Vector2(0, d)
+        theta = math.atan2(half_width, radius - d)
+        print(f"{math.degrees(theta) = }")
 
-    async def handle_record(self, record: Record) -> None:
-        """Raise events from record."""
-        # print(f'{record = }')
-        self.position = record.position
-        for event_name, event_data in record.events.items():
-            event = Event(event_name, event_data)
-            # print(f'{event = }')
-            await self.machine.raise_event(event)
+        ##        angle = theta / (max(self.stage.active_count, 1))
+
+        ##right_start = (math.pi - theta) / 2
+
+        ##pygame.draw.circle(screen, WHITE, circle_center, radius, width=1)
+        ##pygame.draw.line(screen, WHITE, circle_center, center)
+
+        ##        c = max(self.stage.active_count, 1) + 1
+        ##        for i in range(c+1):
+        ##            end = center - Vector2.from_radians(math.pi * (i / c), 100)
+        ##            pygame.draw.line(screen, RED, center, end, 3)
+
+        count = max(self.stage.active_count, 1) + 1
+        spacing = working_width // max(self.stage.active_count, 1)
+        y = SCREEN_SIZE[1] // 2
+        radius = 778
+        ##        print(f'{circle_center - center = }')
+        ##        print(f'{circle_center = }')
+        ##        print(f'{center + Vector2(x=0, y=748) = }')
+        circle_center = center + Vector2(x=0, y=748)
+        ##        print(f'{theta = }')
+        theta = 0.2786527663350684
+
+        async with trio.open_nursery() as nursery:
+            for character, raw_position in self.stage.get_positions():
+                r = theta * ((raw_position.x + 1) / (count))  # + right_start
+                position = circle_center - Vector2.from_radians(r, radius)
+                ##print(f'{circle_center = }')
+                ##print(f'{math.degrees(r) = }')
+                ##position = Vector2.from_radians(r, radius) + circle_center
+                ##position = Vector2.from_radians(r, radius)
+                ##position = Vector2(position.x, -position.y)
+                ##pygame.draw.line(screen, RED, circle_center, position, 3)
+                ##pygame.draw.line(screen, WHITE, circle_center, position)
+                print(f"{character} {position = }")
+                position = (raw_position * spacing) + (padding, y)
+                await self.manager.raise_event_in_nursery(
+                    Event(f"{character}_set_location", position.rounded()),
+                    nursery,
+                )
+
+    async def handle_visibility_changed(
+        self,
+        event: Event[tuple[str, bool]],
+    ) -> None:
+        """Handle visibility changed event."""
+        speaker, visible = event.data
+        update = False
+        if visible:
+            update = self.stage.character_enter(speaker)
+        else:
+            update = self.stage.character_leave(speaker)
+        if update:
+            await self.update_character_positions()
+
+    async def handle_talk(self, event: Event[tuple[str, str]]) -> None:
+        """Handle talk event."""
+        speaker, words = event.data
+
+        ##        if self.talking.locked():
+        ##            self.talking_needs_cancel = True
+        async with self.talking:
+            if self.stage.character_enter(speaker):
+                await self.update_character_positions()
+
+            self.talking_needs_cancel = False
+            await self.manager.raise_event(Event("text_clear", None))
+
+            await self.manager.raise_event(
+                Event(f"{speaker}_set_visible", True),
+            )
+            degrees = 0
+            for char, delay_type in text_with_delays(words):
+                distance = {0: 0, 1: 5, 2: 10}[delay_type]
+
+                degrees = (degrees + 65) % 360
+                await self.manager.raise_event(
+                    Event("text_add", (char, delay_type != 0)),
+                )
+                wiggle = Vector2.from_degrees(degrees, distance)
+                wiggle_delay = {0: 0.1, 1: 0.1, 2: 0.3}[delay_type]
+                await self.manager.raise_event(
+                    Event(
+                        f"{speaker}_wiggle",
+                        WiggleData(
+                            wiggle,
+                            wiggle_delay,
+                        ),
+                    ),
+                )
+                if self.talking_needs_cancel:
+                    self.talking_needs_cancel = False
+                    await self.manager.raise_event(Event("text_set", words))
+                    break
 
     async def handle_speaker_clicked(self, event: Event[str]) -> None:
-        """Handle speacker clicked event."""
-        results = self.db[self.position][event.data]
-        record = Record(position=results["position"], events=results["events"])
+        """Handle speaker clicked event."""
+        speaker = event.data
+        if self.talking.locked():
+            print("[speaker_clicked] Fast forward text")
+            self.talking_needs_cancel = True
+            return
+        record = self.db[self.position].get("click", {}).get(speaker)
+        if not record:
+            print(
+                f"No click handlers registered for {speaker!r} clicked in state {self.position!r}",
+            )
+            print("Add one with the following:\n")
+            print(f"[{self.position}.click.{speaker}.events]")
+            print("goto = 'not_implemented'\n")
+            return
         await self.handle_record(record)
 
 
@@ -660,6 +879,7 @@ async def async_run() -> None:
     """Handle main event loop."""
     # Set up globals
     global SCREEN_SIZE
+    # global screen
 
     # Set up the screen
     screen = pygame.display.set_mode(SCREEN_SIZE, RESIZABLE, 32, vsync=VSYNC)
@@ -735,7 +955,10 @@ async def async_run() -> None:
 
 def run() -> None:
     """Start asynchronous run."""
-    trio.run(async_run, strict_exception_groups=True)
+    try:
+        trio.run(async_run, strict_exception_groups=True)
+    except ExceptionGroup:
+        traceback.print_exc()
 
 
 def cli_run() -> None:
