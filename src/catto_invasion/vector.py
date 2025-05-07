@@ -23,12 +23,13 @@ from __future__ import annotations
 __title__ = "Vector Module"
 __author__ = "CoolCat467"
 __license__ = "GNU General Public License Version 3"
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 import math
 import sys
 from typing import (
     TYPE_CHECKING,
+    ClassVar,
 )
 
 from catto_invasion.namedtuple_mod import NamedTupleMeta
@@ -66,11 +67,20 @@ class BaseVector:
     __slots__ = ()
 
     if TYPE_CHECKING:
+        # Because of type hacks later on, pretend we have
+        # the same things NamedTuple does
+        _field_defaults: ClassVar[dict[str, float]]
+        _fields: ClassVar[tuple[str, ...]]
 
         # D105 is 'Missing docstring in magic method', but this is to handle
         # typing issues
         def __iter__(self) -> Iterator[float]: ...  # noqa: D105
         def __getitem__(self, value: int) -> float: ...  # noqa: D105
+        def _asdict(self) -> dict[str, float]: ...
+        def _replace(self, /, **kwds: int | float) -> Self: ...
+        def __getnewargs__(self) -> tuple[float, ...]: ...  # noqa: D105
+        @classmethod
+        def _make(cls, iterable: Iterable[float]) -> Self: ...
 
     @classmethod
     def from_iter(cls: type[Self], iterable: Iterable[float]) -> Self:
@@ -98,6 +108,10 @@ class BaseVector:
     def normalized(self: Self) -> Self:
         """Return a normalized (unit) vector."""
         return self / self.magnitude()
+
+    def __bool__(self: Self) -> bool:
+        """Return if any component is nonzero."""
+        return any(self)
 
     # rhs is Right Hand Side
     def __add__(
@@ -218,6 +232,7 @@ class BaseVector:
 if TYPE_CHECKING:
     VectorBase = BaseVector
 else:
+    # In reality, it's a NamedTuple metaclass
     VectorBase = type.__new__(
         NamedTupleMeta,
         "VectorBase",

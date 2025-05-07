@@ -1,4 +1,14 @@
-"""typing.NamedTupleMeta mod."""
+"""typing.NamedTupleMeta modification.
+
+Removes the requirement that NamedTuple can only inherit from
+NamedTuple or Generic
+
+Licensed under the Python Software Foundation License
+(see https://github.com/python/cpython/blob/main/LICENSE)
+
+Original source that this is a modified portion of:
+https://github.com/python/cpython/blob/main/Lib/typing.py
+"""
 
 from __future__ import annotations
 
