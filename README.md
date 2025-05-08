@@ -12,8 +12,16 @@ Catto Invasion Visual Novel
 <!-- END BADGIE TIME -->
 
 ## Installation
+- To install the newest version from the internet:
 ```console
 pip install git+https://github.com/CoolCat467/Catto-Invasion.git
+```
+
+To install local copy:
+- Clone this repo
+- Go to folder repo is cloned in
+```console
+pip install -e .
 ```
 
 ## Run
