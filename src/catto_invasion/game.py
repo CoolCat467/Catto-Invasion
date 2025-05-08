@@ -25,7 +25,6 @@ __license__ = "GNU General Public License Version 3"
 __version__ = "0.0.0"
 
 import contextlib
-import math
 import platform
 import sys
 import traceback
@@ -673,6 +672,7 @@ class PlayState(GameState):
         new_state = event.data
         self.visited.setdefault(self.position, set())
         self.visited[self.position].add(new_state)
+        print(f"{self.visited = }")
         self.position = new_state
         await self.handle_position()
 
@@ -684,6 +684,9 @@ class PlayState(GameState):
             event = Event(event_name, event_data)
             ##print(f"[handle_record] {event = }")
             await self.manager.raise_event(event)
+        conditionals = record.get("conditionals", {})
+        for condition in conditionals:
+            print(f"{condition = }")
 
     async def handle_position(self) -> None:
         """Handle position change."""
@@ -704,7 +707,7 @@ class PlayState(GameState):
 
     async def update_character_positions(self) -> None:
         """Update character positions."""
-        print("[update_character_positions]")
+        ##        print("[update_character_positions]")
         ##screen_width = SCREEN_SIZE[0]
         ##padding = screen_width // 6
         ##working_area = screen_width - (padding * 2)
@@ -719,18 +722,18 @@ class PlayState(GameState):
         ##            nursery,
         ##        )
         screen_width = SCREEN_SIZE[0]
-        center = Vector2.from_iter(SCREEN_SIZE) // 2
+        ##        center = Vector2.from_iter(SCREEN_SIZE) // 2
         padding = screen_width // 6
         working_width = screen_width - (padding * 2)
 
-        half_width = working_width // 2
-        d = 30
+        ##        half_width = working_width // 2
+        ##        d = 30
 
-        radius = (((half_width * half_width) // d) + d) // 2
-        print(f"{radius = }")
-        circle_center = center + Vector2(0, radius) - Vector2(0, d)
-        theta = math.atan2(half_width, radius - d)
-        print(f"{math.degrees(theta) = }")
+        ##radius = (((half_width * half_width) // d) + d) // 2
+        ##print(f"{radius = }")
+        ##circle_center = center + Vector2(0, radius) - Vector2(0, d)
+        ##theta = math.atan2(half_width, radius - d)
+        ##print(f"{math.degrees(theta) = }")
 
         ##        angle = theta / (max(self.stage.active_count, 1))
 
@@ -744,29 +747,29 @@ class PlayState(GameState):
         ##            end = center - Vector2.from_radians(math.pi * (i / c), 100)
         ##            pygame.draw.line(screen, RED, center, end, 3)
 
-        count = max(self.stage.active_count, 1) + 1
+        ##        count = max(self.stage.active_count, 1) + 1
         spacing = working_width // max(self.stage.active_count, 1)
         y = SCREEN_SIZE[1] // 2
-        radius = 778
-        ##        print(f'{circle_center - center = }')
-        ##        print(f'{circle_center = }')
-        ##        print(f'{center + Vector2(x=0, y=748) = }')
-        circle_center = center + Vector2(x=0, y=748)
-        ##        print(f'{theta = }')
-        theta = 0.2786527663350684
+        ##        radius = 778
+        ##        ##        print(f'{circle_center - center = }')
+        ##        ##        print(f'{circle_center = }')
+        ##        ##        print(f'{center + Vector2(x=0, y=748) = }')
+        ##        circle_center = center + Vector2(x=0, y=748)
+        ##        ##        print(f'{theta = }')
+        ##        theta = 0.2786527663350684
 
         async with trio.open_nursery() as nursery:
             for character, raw_position in self.stage.get_positions():
-                r = theta * ((raw_position.x + 1) / (count))  # + right_start
-                position = circle_center - Vector2.from_radians(r, radius)
-                ##print(f'{circle_center = }')
-                ##print(f'{math.degrees(r) = }')
-                ##position = Vector2.from_radians(r, radius) + circle_center
-                ##position = Vector2.from_radians(r, radius)
-                ##position = Vector2(position.x, -position.y)
-                ##pygame.draw.line(screen, RED, circle_center, position, 3)
-                ##pygame.draw.line(screen, WHITE, circle_center, position)
-                print(f"{character} {position = }")
+                ##                r = theta * ((raw_position.x + 1) / (count))  # + right_start
+                ##                position = circle_center - Vector2.from_radians(r, radius)
+                ##                ##print(f'{circle_center = }')
+                ##                ##print(f'{math.degrees(r) = }')
+                ##                ##position = Vector2.from_radians(r, radius) + circle_center
+                ##                ##position = Vector2.from_radians(r, radius)
+                ##                ##position = Vector2(position.x, -position.y)
+                ##                ##pygame.draw.line(screen, RED, circle_center, position, 3)
+                ##                ##pygame.draw.line(screen, WHITE, circle_center, position)
+                ##                print(f"{character} {position = }")
                 position = (raw_position * spacing) + (padding, y)
                 await self.manager.raise_event_in_nursery(
                     Event(f"{character}_set_location", position.rounded()),

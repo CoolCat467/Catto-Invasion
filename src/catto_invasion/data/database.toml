@@ -5,6 +5,8 @@ goto = "0"
 
 [not_implemented.events]
 load_speakers = ["mr_floppy"]
+cat_babushka_set_visible = false
+cat_supreme_set_visible = false
 mr_floppy_talk = "NotImplementedError -> Reset"
 
 [not_implemented.click.mr_floppy.events]
@@ -28,6 +30,9 @@ cat_supreme_talk = "Hello grandma!"
 ##cat_supreme_set_visible = false
 goto = '2'
 
+[1.click.cat_babushka.events]
+goto = '2'
+
 
 [2.events]
 cat_babushka_talk = "How are you doing today young one?"
@@ -36,13 +41,74 @@ cat_babushka_talk = "How are you doing today young one?"
 ##cat_babushka_set_visible = false
 goto = '3'
 
+[2.click.cat_supreme.events]
+goto = '3'
+
 
 [3.events]
 cat_supreme_talk = "I am doing quite well,\nhow are you grandma?"
 
+[3.click.cat_babushka.events]
+goto = '4'
+
 [3.click.cat_supreme.events]
-##cat_supreme_set_visible = false
+goto = '4'
+
+
+
+[4.events]
+cat_babushka_talk = "I am also doing pretty well,\nbut we need to get a few things\nfrom the market."
+
+[4.click.cat_babushka.events]
+goto = 'choice'
+
+[4.click.cat_supreme.events]
+goto = 'choice'
+
+
+
+[choice.events]
+load_speakers = ["mr_floppy"]
+cat_babushka_set_visible = true
+cat_supreme_set_visible = true
+mr_floppy_talk = "Who will go to the market?\n(Choose a character)"
+
+[choice.click.cat_supreme.events]
+goto = 'cat_supreme_market'
+
+[choice.click.cat_babushka.events]
+goto = 'cat_babushka_market'
+
+[choice.click.mr_floppy.events]
+goto = 'choose_again'
+
+
+[choose_again.events]
+cat_babushka_set_visible = false
+cat_supreme_set_visible = false
+mr_floppy_talk = "I am the narrator, I can't\ngo to the market."
+
+[choose_again.click.mr_floppy.events]
+goto = 'choice'
+
+
+[cat_supreme_market.events]
+mr_floppy_set_visible = false
+cat_babushka_set_visible = false
+cat_supreme_talk = "I am going to the market."
+
+[cat_supreme_market.click.cat_supreme.events]
 goto = 'not_implemented'
+
+
+[cat_babushka_market.events]
+mr_floppy_set_visible = false
+cat_supreme_set_visible = false
+cat_babushka_talk = "I am going to the market."
+
+[cat_babushka_market.click.cat_babushka.events]
+goto = 'not_implemented'
+
 
 
 #Это моя комната.
