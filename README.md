@@ -1,7 +1,7 @@
 # Catto-Invasion
 Catto Invasion Visual Novel
 
-[![CI](https://github.com/CoolCat467/Catto-Invasion/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CoolCat467/Scanner-Server/actions/workflows/ci.yml)
+[![CI](https://github.com/CoolCat467/Catto-Invasion/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CoolCat467/Catto-Invasion/actions/workflows/ci.yml)
 <!-- BADGIE TIME -->
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/CoolCat467/Catto-Invasion/main.svg)](https://results.pre-commit.ci/latest/github/CoolCat467/Catto-Invasion/main)
@@ -38,3 +38,12 @@ things happen if you click different characters.
 
 ## Extending
 All story data lives in ./src/catto_invasion/data/database.toml
+
+
+### Links
+* Source Code - https://github.com/CoolCat467/Catto-Invasion.git
+* Issues      - https://github.com/CoolCat467/Catto-Invasion/issues
+
+### License
+-------
+Code and documentation are available according to the GNU General Public License v3.0 (see [LICENSE](https://github.com/CoolCat467/Catto-Invasion/blob/HEAD/LICENSE)).
