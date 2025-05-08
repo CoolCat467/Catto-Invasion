@@ -243,11 +243,10 @@ class TextBox(objects.OutlinedText):
         await trio.lowlevel.checkpoint()
 
 
-def text_with_delays(text: str) -> Generator[tuple[str, int], None, None]:
-    """Yield characters and delay types to wait.
-
-    0 is short, 1 is normal, 2 is long.
-    """
+def text_with_delays(
+    text: str,
+) -> Generator[tuple[str, tuple[int, float]], None, None]:
+    """Yield characters and (distance, delay) pairs."""
     short_wait = set(" ")
     long_wait = set(",.?!")
 
@@ -257,13 +256,26 @@ def text_with_delays(text: str) -> Generator[tuple[str, int], None, None]:
         for part in parts:
             for char in part:
                 if char in short_wait:
-                    yield char, 0
+                    yield char, (0, 0.1)
                 elif char in long_wait:
-                    yield char, 2
+                    yield char, (10, 0.3)
                 else:
-                    yield char, 1
+                    yield char, (5, 0.1)
+            ### Extra for hyphenation
+            ##extra_distance = 2
+            ##extra_time = -0.05
+            ##for char in part:
+            ##    if char in short_wait:
+            ##        yield char, (0+extra_distance, 0.1+extra_time)#0
+            ##    elif char in long_wait:
+            ##        yield char, (10+extra_distance, 0.3+extra_time)#2
+            ##    else:
+            ##        yield char, (5+extra_distance, 0.1+extra_time)#1
+            ##    extra_distance = 0
+            ##    extra_time = 0
+        # Spaces
         if idx < (len(words) - 1):
-            yield " ", 0
+            yield " ", (0, 0.1)
 
 
 class Speaker(sprite.Sprite):
@@ -310,7 +322,6 @@ class Speaker(sprite.Sprite):
 
     async def wiggle(self, event: Event[WiggleData]) -> None:
         """Handle wiggle event."""
-        ##        self.location = Vector2(*SCREEN_SIZE) // 2
         self.location += event.data.wiggle
         self.dirty = 1
         await trio.sleep(event.data.wiggle_time)
@@ -323,7 +334,6 @@ class Speaker(sprite.Sprite):
         await self.raise_event(
             Event("visibility_changed", (self.name, self.visible), 1),
         )
-        await trio.lowlevel.checkpoint()
 
     async def talk(self, event: Event[str]) -> None:
         """Handle talk event."""
@@ -347,6 +357,8 @@ class FPSCounter(objects.Text):
             28,
         )
         super().__init__("fps", font)
+
+        self.add_component(WindowResizeAutoMove())
 
     async def on_tick(self, event: Event[sprite.TickEventData]) -> None:
         """Update text."""
@@ -807,15 +819,15 @@ class PlayState(GameState):
                 Event(f"{speaker}_set_visible", True),
             )
             degrees = 0
-            for char, delay_type in text_with_delays(words):
-                distance = {0: 0, 1: 5, 2: 10}[delay_type]
+            for char, (distance, wiggle_delay) in text_with_delays(words):
+                ##                distance = {0: 0, 1: 5, 2: 10}[delay_type]
 
                 degrees = (degrees + 65) % 360
                 await self.manager.raise_event(
-                    Event("text_add", (char, delay_type != 0)),
+                    Event("text_add", (char, distance != 0)),
                 )
                 wiggle = Vector2.from_degrees(degrees, distance)
-                wiggle_delay = {0: 0.1, 1: 0.1, 2: 0.3}[delay_type]
+                ##                wiggle_delay = {0: 0.1, 1: 0.1, 2: 0.3}[delay_type]
                 await self.manager.raise_event(
                     Event(
                         f"{speaker}_wiggle",
@@ -906,7 +918,6 @@ async def async_run() -> None:
 
         await client.set_state("initialize")
 
-        # clock = pygame.time.Clock()
         clock = Clock()
 
         resized_window = False
