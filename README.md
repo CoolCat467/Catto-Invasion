@@ -21,5 +21,12 @@ pip install git+https://github.com/CoolCat467/Catto-Invasion.git
 catto_invasion_game
 ```
 
+## How to play
+Click the character icons. If you click a character while any character
+is still talking, it will skip doing typewriter style printing and just
+display the entire text box immediately so you don't have to wait for
+them to finish talking. Story database can be set up to have different
+things happen if you click different characters.
+
 ## Extending
 All story data lives in ./src/catto_invasion/data/database.toml
