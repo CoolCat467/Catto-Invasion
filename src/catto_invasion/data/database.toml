@@ -151,4 +151,182 @@ goto = 'not_implemented'
 #What we not have? -> What don't we have?
 
 #Что ты о нём знаешь?
-#What we about him know? -> What do we know about him?
+#What you about him know? -> What do you know about him?
+
+#Мой друг — очень интересный человек.
+#My friend is a very interesting person.
+
+#Кто знает ответ на этот вопрос?
+#Who knows the answer to this question?
+
+#Я ищу главный зал.
+#I am looking for the main hall.
+
+#Кошка — домашнее животное.
+#The cat is a domestic animal (pet)
+
+#Я еду домой без тебя.
+#I am going home without you.
+
+#Наш котёнок лежит около коробки.
+#Our kitten is lying <near/around/beside> the box
+
+#В этой комнате стоит белый стол.
+#In this room stands a white table -> A white table stands in this room
+
+#Кровать стоит около стола.
+#Bed stands <near/around/beside> table -> The bed is near the table
+
+#Я читаю об этой улице.
+#I am reading about this <*street*/outside>
+
+#В какой стране они живут?
+#In which country do they live?
+
+#Мне нравится эта ночь.
+#I like this night
+
+#Как вы там без меня?
+#How you there without me? -> How are you there without me?
+
+#Наш котёнок лежит около коробки.
+#Our kitten is lying <near/beside/around> the box.
+
+#Наша страна - большая.
+#Our country is large
+
+#Ты читаешь обо мне?
+#Are you reading about me?
+
+#На улице хорошо.
+#On <street/*outside/outdoors*> it is good/nice -> It is nice outdoors
+
+#Мне нравится новый учитель.
+#I like the new teacher.
+
+#Как сказать «Спасибо»?
+#How do you say "Thank you"?
+
+#Он не умеет читать.
+#He not know to read -> He does not know how to read.
+
+#Мой парень не умеет готовить.
+#My boyfriend not know to cook -> My boyfriend does not know how to cook.
+
+#И Дима, и Вера — их дети.
+#Both Dima and Vera are their children.
+
+#Мне надо работать.
+#I need to work.
+
+#Стакан воды, пожалуйста.
+#A glass of water, please.
+
+#Борис всегда отдыхает дома.
+#Boris always rests at home.
+
+#Да, он ходит в школу.
+#Yes, he goes to school.
+
+#Сейчас мама отдыхает.
+#Mama is currently resting
+
+#Нет, они не отдыхают.
+#No, they are not resting.
+
+#Я всегда хожу обедать домой.
+#I always go to lunch at home -> I always go home for lunch.
+
+#Да, мои дети ходят в школу.
+#Yes, my children go to school.
+
+#Мой котёнок иногда пьёт молоко.
+#My kitten sometimes drinks milk.
+
+#Да, иногда я туда хожу.
+#Yes, sometimes I there go -> Yes, I go there sometimes
+
+#Днём надо работать.
+#During the day one should work.
+
+#Она всегда опаздывает.
+#She is always late.
+
+#Мария Ивановна, вы спите днём?
+#Maria Ivanovna, do you sleep during the day?
+
+#Почему ты всегда опаздываешь?
+#Why are you always late?
+
+#Я никогда ничего не открываю.
+#I never open anything.
+
+#Они смотрят на нас!
+#They are looking at us!
+
+#Медведи курят.
+#The bears are smoking.
+
+#Моя сестра сидит и читает журнал.
+#My sister is sitting and reading a magazine.
+
+#На столе продукты.
+#On table is products -> There are groceries on the table.
+
+#Почему Вера не отвечает?
+#Why Vera not anwering? -> Why isn't Vera answering?
+
+#Кто меня помнит?
+#Who me remembers? -> Who remembers me?
+
+#Кто нас ещё помнит?
+#Who us still remembers? -> Who still remembers us?
+
+#Они поют и играют музыку за деньги.
+#They sing and play music after money. -> They sing and play music for money.
+
+#Где лежат продукты?
+#Where lie products? -> Where are the groceries?
+
+#Что я забываю?
+#What I forgetting? -> What am I forgetting?
+
+#Ты редко теряешь деньги.
+#You rarely lose money.
+
+#Она мне никогда не помогает.
+#She me ever not helps. -> She never helps me.
+
+#Таня спит. Она ничего не записывает.
+#Tanya sleep. She anything not to write down. -> Tanya is sleeping. She isn't writing anything down.
+
+#Я перевожу эту книгу на английский язык.
+#I am translating this book to English language.
+
+#Мы переводим статьи за деньги.
+#We translate articles for money.
+
+#Мужчина забывает.
+#The man forgets.
+
+#Почему вы вспоминаете этот день?
+#Why you remember this day?
+
+#Как сказать «До свидания»?
+#How say "Goodbye"? -> How do you say "goodbye"?
+
+#Мне очень нравится твой подарок.
+#I very like your gift. -> I like your gift very much.
+
+#Его тётя сестра его отца
+#His aunt sister his father. -> His aunt is his father's sister.
+
+#Кажется, он мой родственник.
+#It seems, he my relative -> It seems he is my relative.
+
+#У моего брата дома нет кровати.
+#Having mine brother house not bed -> My brother's house does not have a bed
+# -> My brother does not have a bed at home.
+
+#Жена моего друга живёт в Германии.
+#Wife mine friend live in Germany -> My friend's wife lives in Germany.
