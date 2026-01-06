@@ -76,6 +76,7 @@ class BaseVector:
         # typing issues
         def __iter__(self) -> Iterator[float]: ...  # noqa: D105
         def __getitem__(self, value: int) -> float: ...  # noqa: D105
+        def __len__(self) -> int: ...  # noqa: D105
         def _asdict(self) -> dict[str, float]: ...
         def _replace(self, /, **kwds: int | float) -> Self: ...
         def __getnewargs__(self) -> tuple[float, ...]: ...  # noqa: D105

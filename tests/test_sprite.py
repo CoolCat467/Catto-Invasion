@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import pytest
 import trio
@@ -31,24 +31,26 @@ def sprite() -> Sprite:
 @pytest.fixture
 def image_component(sprite: Sprite) -> ImageComponent:
     sprite.add_component(ImageComponent())
-    return sprite.get_component("image")
+    return cast("ImageComponent", sprite.get_component("image"))
 
 
 @pytest.fixture
 def animation_component(image_component: ImageComponent) -> AnimationComponent:
-    image_component.add_component(AnimationComponent())
-    return image_component.get_component("animation")
+    return cast(
+        "AnimationComponent",
+        image_component.get_component("animation"),
+    )
 
 
 @pytest.fixture
 def outline_component(image_component: ImageComponent) -> OutlineComponent:
-    return image_component.get_component("outline")
+    return cast("OutlineComponent", image_component.get_component("outline"))
 
 
 @pytest.fixture
 def movement_component(sprite: Sprite) -> MovementComponent:
     sprite.add_component(MovementComponent())
-    return sprite.get_component("movement")
+    return cast("MovementComponent", sprite.get_component("movement"))
 
 
 @pytest.fixture
@@ -57,7 +59,7 @@ def targeting_component(
 ) -> TargetingComponent:
     sprite = movement_component.manager
     sprite.add_component(TargetingComponent())
-    return sprite.get_component("targeting")
+    return cast("TargetingComponent", sprite.get_component("targeting"))
 
 
 @pytest.fixture
@@ -92,7 +94,7 @@ def test_sprite_image(sprite: Sprite) -> None:
     sprite.image = Surface((10, 10))
     assert isinstance(sprite.image, Surface)
     assert sprite.dirty
-    assert sprite.rect.size == (10, 10)
+    assert sprite.rect.size == (10, 10)  # type: ignore[unreachable]
 
 
 def test_sprite_image_set_none(sprite: Sprite) -> None:
@@ -201,7 +203,7 @@ def test_image_component_add_image_and_mask_invalid_mask(
         ValueError,
         match=r"^Expected mask to be a valid identifier$",
     ):
-        image_component.add_image_and_mask("test_image", image, "copy_from")  # type: ignore[arg-type]
+        image_component.add_image_and_mask("test_image", image, "copy_from")
 
 
 def test_image_component_get_image(image_component: ImageComponent) -> None:
@@ -236,6 +238,8 @@ def test_image_component_set_image_affects_sprite(
     image_component.add_image("test_image", image)
     assert sprite.image is None
     image_component.set_image("test_image")
+    if TYPE_CHECKING:
+        sprite.image = image
     assert sprite.image is image
     image_component.set_image("test_image")
     assert sprite.image is image

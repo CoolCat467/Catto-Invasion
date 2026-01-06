@@ -99,13 +99,9 @@ class Sprite(ComponentManager, WeakDirtySprite):
         """Set rect center from tuple of integers."""
         self.rect.center = value
 
-    def __set_location(self, value: tuple[int, int]) -> None:
-        """Set rect center from tuple of integers."""
-        self._set_location(value)
-
     location = property(
         __get_location,
-        __set_location,
+        _set_location,
         doc="Location (Center of image)",
     )
 
@@ -160,7 +156,7 @@ class ImageComponent(ComponentManager):
     """Allow sprite to use multiple images easily.
 
     Components Supplied:
-        # AnimationComponent
+        AnimationComponent
         OutlineComponent
 
     Requires Component:
@@ -186,7 +182,7 @@ class ImageComponent(ComponentManager):
 
         self.add_components(
             (
-                # AnimationComponent(),
+                AnimationComponent(),
                 OutlineComponent(),
             ),
         )
@@ -489,7 +485,7 @@ class MovementComponent(Component):
         """Move distance in heading direction."""
         sprite = cast("Sprite", self.get_component("sprite"))
         change = self.heading * distance
-        if change:
+        if change.dot(change) > 0:
             sprite.location += change
             sprite.dirty = 1
 
@@ -573,17 +569,16 @@ class TargetingComponent(Component):
             return
 
         to_destination = self.to_destination()
-        dest_magnitude = to_destination.magnitude()
         travel_distance = movement.speed * time_passed
 
         if travel_distance > 0:
+            dest_magnitude = to_destination.magnitude()
             if travel_distance > dest_magnitude:
                 sprite.location = self.destination
             else:
-                # Fix imprecision
-                self.update_heading()
-                if travel_distance > 0:
-                    movement.move_heading_distance(travel_distance)
+                movement.move_heading_distance(travel_distance)
+        # Fix imprecision
+        self.update_heading()
         await trio.lowlevel.checkpoint()
 
     async def move_destination_time_ticks(
@@ -599,7 +594,7 @@ class DragEvent(NamedTuple):
 
     pos: tuple[int, int]
     rel: tuple[int, int]
-    buttons: dict[int, bool]
+    button: int
 
 
 class DragClickEventComponent(Component):
@@ -674,17 +669,20 @@ class DragClickEventComponent(Component):
         if not self.manager_exists:
             return
         async with trio.open_nursery() as nursery:
-            nursery.start_soon(
-                self.raise_event,
-                Event(
-                    "drag",
-                    DragEvent(
-                        event.data["pos"],
-                        event.data["rel"],
-                        self.pressed,
+            for button, pressed in self.pressed.items():
+                if not pressed:
+                    continue
+                nursery.start_soon(
+                    self.raise_event,
+                    Event(
+                        "drag",
+                        DragEvent(
+                            event.data["pos"],
+                            event.data["rel"],
+                            button,
+                        ),
                     ),
-                ),
-            )
+                )
 
 
 class GroupProcessor(AsyncStateMachine):

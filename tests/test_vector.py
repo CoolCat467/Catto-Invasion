@@ -28,7 +28,7 @@ def test_eq_vec() -> None:
 
 
 def test_eq_tuple() -> None:
-    assert Vector2(3, 6) == (3, 6)
+    assert Vector2(3, 6) == (3, 6)  # type: ignore[comparison-overlap]
 
 
 def test_from_points() -> None:
@@ -65,6 +65,10 @@ def test_neg() -> None:
 
 def test_mul() -> None:
     assert Vector2(5, 10) * 3 == Vector2(15, 30)
+
+
+def test_rmul() -> None:
+    assert 3 * Vector2(5, 10) == Vector2(15, 30)
 
 
 def test_truediv() -> None:
