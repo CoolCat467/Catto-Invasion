@@ -330,3 +330,368 @@ goto = 'not_implemented'
 
 #Жена моего друга живёт в Германии.
 #Wife mine friend live in Germany -> My friend's wife lives in Germany.
+
+#Плюс девять — это не холодно.
+#Plus Nine - It not cold. -> Plus nine is not cold.
+
+#Температура — плюс шесть.
+#Temperature - Plus six. -> The temperature is plus six.
+
+#Температура — плюс пятнадцать градусов.
+#Temperature - Plus fiveten degrees. -> The temperature is plus fifteen degrees.
+
+#Нам не нравится ветер.
+#We not like wind. -> We don't like the wind.
+
+#Мне не нравится эта игра.
+#I not like this game. -> I do not like this game.
+
+#Вопрос интересный, но я не знаю ответа.
+#Question interesting, but I not know answer. -> The question is
+#interesting, but I do not know the answer.
+
+#У папы всегда есть вопросы.
+#[belonging to] dad always has questions. -> Dad always has questions.
+
+#Он был дома весь день.
+#He was home all day. -> He was at home all day.
+
+#У тебя есть вопросы
+#Do you have questions?
+
+#Чьё молоко ты пьёшь?
+#Who's milk you drink? -> Who's milk are you drinking?
+
+#Я готовлю, пока дети в школе.
+#I cook, while children in school. -> I cook while the children are at school.
+
+#Я умею писать.
+#I know to write/pee -> I know how to write.
+
+#Куда идёт этот мальчик?
+#Where is going this boy? -> Where is this boy going?
+
+#Мой брат работает, пока я готовлю.
+#My brother works, while I cook.
+
+#Девочка хочет всё знать.
+#Girl want everything know. -> The girl wants to know everything.
+
+#Мне надо знать это.
+#I need to know it.
+
+#Мне надо много спать.
+#I need to a lot sleep. -> I need to sleep a lot.
+
+#Она дома, потому что хочет спать.
+#She home, because what [is/do] want sleep. -> She is home because she wants to sleep.
+#Thinking "what" is because of backward, "what do so because want sleep"
+#She is home, reason is because wants to sleep.
+
+#Это правда, что Марк из Канады?
+#Is that true/right/really, that Mark is from Canada? -> Is it true that mark is from Canada?
+
+#Мой ребёнок уже умеет читать.
+#My child already [can/is able/knows how] read. -> My child already knows how to read.
+
+#Эта страна называется Россия.
+#This country called Russia. -> This country is called Russia.
+
+#Это конец.
+#This is the end.
+
+#начало марта
+#beginning March.
+
+#Скоро лето.
+#It will soon be summer.
+
+#Она скоро уходит.
+#She is soon departing. -> She is leaving soon.
+
+#Завтра она занята.
+#Tomorrow she busy. -> Tomorrow she is buisy / She is busy tomorrow
+
+#Виктории десять лет.
+#Viktorii ten years. -> Victoria is ten years old.
+
+#Осенью иногда было грязно.
+#Autumn sometimes was muddy. -> It was muddy in Autumn sometimes.
+
+#Тут всегда было много людей.
+#Here always was a lot people. -> There was always a lot of people here.
+
+#У вашей сестры будет мальчик.
+#[belonging to/having] your sister is going boy. -> Your sister is going to have a boy.
+
+#Скоро будет весна.
+#Soon will spring. -> It will be spring soon.
+
+#Вчера температура была плюс один.
+#Yesterday temperature was plus one.
+
+#Она будет здесь в семь часов двадцать две минуты.
+#She will be here at/in seven hour/o'clock twenty two minute. -> She will be here at seven twenty two.
+
+#Сколько лет Марии?
+#How many years Marii? -> How many years old is Maria? -> How old is Maria?
+
+#Вчера эта девочка не была в школе.
+#Yesterday this girl not was in/at school. -> Yesterday this girl was not at school.
+
+#Тогда была зима.
+#Then was winter. -> It was then winter.
+
+#Ей будет двадцать в августе.
+#She will be twenty in August.
+
+#В октябре папа был в Америке.
+#In october papa will be in America.
+
+#У меня отпуск в июле.
+#Having me leave in july. -> I have a vacation in july.
+
+#У меня отпуск в начале ноября.
+#Having me leave in beginning november. -> I have a vacation in the beginning of november.
+
+#Этот писатель был здесь в июне.
+#This writer was here in june.
+
+#В ноябре всегда холодно.
+#In november always cold. -> It is always cold in november.
+
+#Мой отпуск - в конце июля.
+#My leave - in the end july. -> My vacation is in the end of july.
+
+#Он будет в отпуске в сентябре.
+#He will be in leave in september. -> He will be on vacation in september.
+
+#У нас нет отпуска в октябре.
+#Having us not leave in october. -> We do not have a vacation in october.
+
+#Моя мама была у нас в августе.
+#My mama was having our in august. -> My mom was at our place in august.
+
+#Когда было начало месяца?
+#when was beginning month? -> When was the beginning of the month?
+
+#В январе в Москве очень холодно.
+#In january in Moscow very cold. -> It january in Moscow it is very cold.
+
+#Сейчас февраль, а не март.
+#Right now february, and not march. -> Now it is february, not march.
+
+#пять часов семнадцать минут восемь секунд
+#five hours seventeen minutes eight seconds.
+
+#Вера будет в Москве в конце апреля.
+#Vera will in Moscow in end april. -> Vera will be in Moscow at the end of april.
+
+#Моя мама живёт здесь тринадцать лет.
+#My mama live here thirteen years. -> My mom has lived here for thirteen years.
+
+#В мае моя сестра была в Германии.
+#In may my sister will in Germany. -> In may my sister will be in Germany
+
+#Виктории тринадцать лет.
+#Victoria thirteen years. -> Victoria is thirteen years old.
+
+#Зачем читать плохую книгу?
+#Why read bad book? -> Why would you read a bad book?
+
+#Я не хочу эту плохую книгу, хотя её автор — мой брат.
+#I not want this bad book, although his author - my brother. -> I don't want this bad book, even though my brother is it's author.
+
+#Это хорошее место для ресторана.
+#It is good place for restaurant -> It is a good place for a restaurant.
+
+#Это красивое место.
+#It is beautiful place. -> It's a beautiful place.
+
+#Красивое кафе, мне нравится.
+#Beautiful cafe, I like. -> It is a beautiful cafe, I like it.
+
+#На тарелке хлеб и маленькое яблоко.
+#On plate bread and little apple. -> There is bread and a little apple on the plate.
+
+#Вы знаете правила игры?
+#You know rules game? -> Do you know the rules of the game?
+
+#Дайте, пожалуйста, маленькое яблоко.
+#Give me, please, little apple. -> Give me the little apple, please.
+
+#Эта погода мне нравится.
+#This weather I like. -> I like this weather.
+
+#На улице прекрасная погода.
+#On outside splendid weather. -> The weather is splendid outside.
+
+#У нас сейчас плохая погода.
+#Having us now bad weather. -> We are having bad weather now.
+
+#Вчера была хорошая погода.
+#Yesterday was good weather. -> Yesterday the weather was good.
+
+#У тебя очень короткая фамилия.
+#Having you very short family name. -> You have a very short last name.
+
+#новые вещи
+#new things
+
+#У меня для вас плохие новости.
+#Having me for you bad news. -> I have bad news for you.
+
+#Они хорошие художники.
+#They good <multiple> artists/painters. -> They are good artists.
+
+#странные яблоки
+#strange/weird apples
+
+#Только для вас!
+#Is only for you! -> Only for you!
+
+#В этом лесу странные животные.
+#In this forest strange animals. -> There are strange animals in this forest.
+
+#интересные новости
+#interesting news
+
+#Вы интересные люди.
+#You interesting people. -> You are interesting people.
+
+#В лесу есть красивые птицы.
+#In forest are beautiful birds. -> There are beautiful birds in the forest.
+
+#Я знаю все правила.
+#I know all rules. -> I know all the rules.
+
+#Да, я говорю по-английски.
+#Yes, I speak in english.
+
+#Я совсем не говорю по-немецки.
+#I at all not speak in german. -> I do not speak german at all.
+
+#Мы говорим и по-немецки, и по-русски.
+#We speak and in german, and in russian. -> We speak both german and russian.
+
+#Я совсем не понимаю английский.
+#I at all not understand english. -> I don't understand english at all.
+
+#Я говорю по-английски.
+#I speak in english.
+
+#Это книги твоего ученика?
+#These books your student's? -> Are these books your student's?
+
+#Мы говорили о фильме.
+#We were talking about film. -> We were talking about the film.
+
+#Старики говорили о жизни.
+#Old men were talking about life. -> The old men were talking about life.
+
+#Я не знала, где школа.
+#I not did know, where school. -> I did not know where the school was.
+
+#Я здесь раньше не была.
+#I here previously not was. -> I have not been here before.
+
+#Я раньше не читал эту книгу.
+#I previously not did read this book. -> I have not read this book before.
+
+#Мы уже смотрели его фильм.
+#We already did watch his film. -> We already watched his film/movie.
+
+#Мы не знали, сколько ей лет.
+#We not did know, how many her years. -> We did not know how old she was.
+
+#Моя жена жила в Москве.
+#My wife lived in Moscow.
+
+#Я много где жил.
+#I many where is has lived. -> I have lived many places.
+
+#Борис говорит по-немецки, потому что много жил в Германии.
+#Boris speaks in german, because he a lot has lived in Germany. -> Boris speaks german, because he has lived in Germany a lot.
+
+#Я тогда жил в деревне.
+#I then lived in village. -> I lived in a village then.
+
+#В Германии Вера жила одна.
+#In Germany Vera lived single/one. -> In Germany, Vera lived alone.
+
+#Они стояли возле нас.
+#They were standing near us.
+
+#Где жила твоя сестра?
+#Where lived your sister? -> Where did your sister live?
+
+#Мы стояли на улице и говорили.
+#We were standing on outside and talking. -> We were standing outside and talking.
+
+#Стол стоял около окна.
+#Table was standing near window. -> The table was standing near the window.
+
+#Композитор стоял и смотрел на нас.
+#Composer was standing and looking at us. -> The composer was standing and looking at us.
+
+#Таня стояла около реки.
+#Tanya was standing near river. -> Tanya was standing near the river.
+
+#Девочка стояла у двери дома.
+#Girl was standing at door house. -> The girl was standing at the door of the house.
+
+#Ты слышала о газете «Метро»?
+#You have heard about newspaper "Metro"? -> Have you heard about the newspaper "Metro"?
+
+#Мальчик любит смотреть на машины.
+#Boy like look at cars. -> The boy likes to look at cars.
+
+#Юлия не хочет ходить в магазин.
+#Yulia not want to walk to store. -> Yulia does not want to walk/go to the store.
+
+#Все всё знали.
+#Everyone everything knew. -> Everyone knew everything.
+
+#Нет, я не ходил домой.
+#No, I not have gone home. -> No, I did not go home.
+
+#Озеро не далеко, я ходил туда вчера.
+#Lake not far away, I went there yesterday.
+
+#Вера ходила в магазин.
+#Vera went to store. -> Vera went to the store.
+
+#Все хотят знать, куда ты вчера ходил.
+#Everyone wants know, where you yesterday went. -> Everyone wants to know where you went yesterday.
+
+#В пять лет я не умела читать.
+#In five year I not did know read. -> When I was five years old I did not know how to read.
+
+#Скажи, куда ты ходила?
+#Tell me, where you went/have been/go -> Tell me, where did you go / where have you been / where you went
+
+#Я всегда хотела писать музыку.
+#I always wanted to write music.
+
+#Раньше она не хотела ходить в школу.
+#Formerly she not wanted to go to school. -> Formerly she did not want to go to school.
+
+#Я никогда не пробовал играть на пианино.
+#I ever not have tried play on piano. -> I have never tried to play the piano.
+
+#Он пробовал работать, хотя и хотел спать.
+#He has tried work, although and has wanted to sleep. -> He tried to work, even though he wanted to sleep.
+
+#В шесть лет мой брат не умел писать.
+#In six year my brother not knew to write. -> When my brother was six years old he did not know how to write
+
+#Я люблю смотреть на звёзды.
+#I like looking at stars. -> I like looking at the stars.
+
+#Ты это слышал?
+#You that have heard? -> Did you hear that?
+
+#Она просит не смотреть телевизор, пока она спит.
+#She asks not to watch television, while she sleep. -> She asks not to watch television, while she is sleeping.
+
+#
