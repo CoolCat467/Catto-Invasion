@@ -2,20 +2,20 @@
 
 # Programmed by CoolCat467
 
-# Copyright (C) 2024-2025  CoolCat467
+# Copyright (C) 2024-2026  CoolCat467
 #
-#     This program is free software: you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation, either version 3 of the License, or
-#     (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#     You should have received a copy of the GNU General Public License
-#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
@@ -206,6 +206,7 @@ class TextBox(objects.OutlinedText):
         self.text = ""
 
         self.sound = pygame.mixer.Sound(DATA_FOLDER / "talky.wav")
+        # self.sound = pygame.mixer.Sound(DATA_FOLDER / "talky_karato.mp3")
 
     def bind_handlers(self) -> None:
         """Register event handlers."""
@@ -287,8 +288,16 @@ class Speaker(sprite.Sprite):
         """Initialize Speaker."""
         super().__init__(name)
 
+        filename = DATA_FOLDER / f"{name}.png"
+        if not filename.exists():
+            print(
+                f"Sprite image not found: {str(filename)!r}",
+                file=sys.stderr,
+            )
+            filename = DATA_FOLDER / "noimage.png"
+
         self.image = pygame.transform.scale(
-            pygame.image.load(DATA_FOLDER / f"{name}.png"),
+            pygame.image.load(filename),
             (128, 128),
         )
 
@@ -307,6 +316,7 @@ class Speaker(sprite.Sprite):
                 f"{self.name}_set_visible": self.set_visible,
                 f"{self.name}_talk": self.talk,
                 f"{self.name}_set_location": self.set_location,
+                f"{self.name}_move_to": self.move_to,
                 "click": self.click,
             },
         )
@@ -344,6 +354,16 @@ class Speaker(sprite.Sprite):
         self.location = event.data
         self.dirty = 1
 
+    async def move_to(self, event: Event[str]) -> None:
+        """Handle move to event."""
+        desc = event.data
+        location = Vector2(*SCREEN_SIZE) // 2
+        if desc == "center":
+            pass
+        else:
+            raise ValueError(f"Unknown location {desc!r}")
+        await self.set_location(Event(f"{self.name}_set_location", location))
+
 
 class FPSCounter(objects.Text):
     """FPS counter."""
@@ -353,7 +373,7 @@ class FPSCounter(objects.Text):
     def __init__(self) -> None:
         """Initialize FPS counter."""
         font = pygame.font.Font(
-            trio.Path(path.dirname(__file__), "data", "VeraSerif.ttf"),
+            FONT_FILE,
             28,
         )
         super().__init__("fps", font)
@@ -509,11 +529,11 @@ class TitleState(GameState):
         self.id = self.machine.new_group("title")
 
         button_font = pygame.font.Font(
-            trio.Path(path.dirname(__file__), "data", "VeraSerif.ttf"),
+            FONT_FILE,
             28,
         )
         title_font = pygame.font.Font(
-            trio.Path(path.dirname(__file__), "data", "VeraSerif.ttf"),
+            FONT_FILE,
             56,
         )
 
@@ -664,6 +684,8 @@ class PlayState(GameState):
                 "talk": self.handle_talk,
                 "speaker_clicked": self.handle_speaker_clicked,
                 "visibility_changed": self.handle_visibility_changed,
+                "pause": self.handle_pause,
+                "play_sound": self.handle_play_sound,
             },
         )
 
@@ -859,6 +881,15 @@ class PlayState(GameState):
             print("goto = 'not_implemented'\n")
             return
         await self.handle_record(record)
+
+    async def handle_pause(self, event: Event[float]) -> None:
+        """Handle pause event."""
+        delay = event.data
+        await trio.sleep(delay)
+
+    async def handle_play_sound(self, event: Event[str]) -> None:
+        """Handle play sound event."""
+        play_sound(event.data)
 
 
 class CattoClient(sprite.GroupProcessor):

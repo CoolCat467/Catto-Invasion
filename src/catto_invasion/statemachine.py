@@ -28,11 +28,12 @@ __license__ = "GNU General Public License Version 3"
 from typing import TYPE_CHECKING, Generic, TypeVar
 from weakref import ref
 
+import trio
+
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from typing_extensions import Self
-import trio
 
 __all__ = ["AsyncState", "AsyncStateMachine", "State", "StateMachine"]
 

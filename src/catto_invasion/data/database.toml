@@ -163,16 +163,16 @@ goto = 'not_implemented'
 #I am looking for the main hall.
 
 #Кошка — домашнее животное.
-#The cat is a domestic animal (pet)
+#Cat -- domestic animal -> The cat is a domestic animal (pet)
 
 #Я еду домой без тебя.
 #I am going home without you.
 
 #Наш котёнок лежит около коробки.
-#Our kitten is lying <near/around/beside> the box
+#Our kitten is lying <near/around/beside> the box.
 
 #В этой комнате стоит белый стол.
-#In this room stands a white table -> A white table stands in this room
+#In this room stands white table -> A white table stands in this room
 
 #Кровать стоит около стола.
 #Bed stands <near/around/beside> table -> The bed is near the table
@@ -184,58 +184,55 @@ goto = 'not_implemented'
 #In which country do they live?
 
 #Мне нравится эта ночь.
-#I like this night
+#I like this night.
 
 #Как вы там без меня?
 #How you there without me? -> How are you there without me?
 
-#Наш котёнок лежит около коробки.
-#Our kitten is lying <near/beside/around> the box.
-
 #Наша страна - большая.
-#Our country is large
+#Our country - large. -> Our country is large.
 
 #Ты читаешь обо мне?
-#Are you reading about me?
+#You reading about me? -> Are you reading about me?
 
 #На улице хорошо.
-#On <street/*outside/outdoors*> it is good/nice -> It is nice outdoors
+#On <street/*outside/outdoors*> good/nice -> It is nice outdoors.
 
 #Мне нравится новый учитель.
-#I like the new teacher.
+#I like new teacher. -> I like the new teacher.
 
 #Как сказать «Спасибо»?
 #How do you say "Thank you"?
 
 #Он не умеет читать.
-#He not know to read -> He does not know how to read.
+#He not know read -> He does not know how to read.
 
 #Мой парень не умеет готовить.
 #My boyfriend not know to cook -> My boyfriend does not know how to cook.
 
 #И Дима, и Вера — их дети.
-#Both Dima and Vera are their children.
+#And Dma, and Vera - their children. -> Both Dima and Vera are their children.
 
 #Мне надо работать.
-#I need to work.
+#I need work. -> I need to work.
 
 #Стакан воды, пожалуйста.
-#A glass of water, please.
+#Glass water, please. -> A glass of water, please.
 
 #Борис всегда отдыхает дома.
-#Boris always rests at home.
+#Boris always rests home. -> Boris always rests at home.
 
 #Да, он ходит в школу.
 #Yes, he goes to school.
 
 #Сейчас мама отдыхает.
-#Mama is currently resting
+#Currently mama resting. -> Mama is currently resting.
 
 #Нет, они не отдыхают.
-#No, they are not resting.
+#No, they not resting. -> No, they are not resting.
 
 #Я всегда хожу обедать домой.
-#I always go to lunch at home -> I always go home for lunch.
+#I always go lunch home -> I always go home for lunch.
 
 #Да, мои дети ходят в школу.
 #Yes, my children go to school.
@@ -247,31 +244,31 @@ goto = 'not_implemented'
 #Yes, sometimes I there go -> Yes, I go there sometimes
 
 #Днём надо работать.
-#During the day one should work.
+#During day work. -> During the day one should work.
 
 #Она всегда опаздывает.
-#She is always late.
+#She always late. -> She is always late.
 
 #Мария Ивановна, вы спите днём?
-#Maria Ivanovna, do you sleep during the day?
+#Maria Ivanovna, you sleep day? -> Maria Ivanovna, do you sleep during the day?
 
 #Почему ты всегда опаздываешь?
-#Why are you always late?
+#Why you always late? -> Why are you always late?
 
 #Я никогда ничего не открываю.
-#I never open anything.
+#I ever nothing not open. -> I never open anything.
 
 #Они смотрят на нас!
-#They are looking at us!
+#They looking at us! -> They are looking at us!
 
 #Медведи курят.
-#The bears are smoking.
+#Bears smoking. -> The bears are smoking.
 
 #Моя сестра сидит и читает журнал.
 #My sister is sitting and reading a magazine.
 
 #На столе продукты.
-#On table is products -> There are groceries on the table.
+#On table products -> There are groceries on the table.
 
 #Почему Вера не отвечает?
 #Why Vera not anwering? -> Why isn't Vera answering?
@@ -347,8 +344,7 @@ goto = 'not_implemented'
 #I not like this game. -> I do not like this game.
 
 #Вопрос интересный, но я не знаю ответа.
-#Question interesting, but I not know answer. -> The question is
-#interesting, but I do not know the answer.
+#Question interesting, but I not know answer. -> The question is interesting, but I do not know the answer.
 
 #У папы всегда есть вопросы.
 #[belonging to] dad always has questions. -> Dad always has questions.
@@ -693,5 +689,476 @@ goto = 'not_implemented'
 
 #Она просит не смотреть телевизор, пока она спит.
 #She asks not to watch television, while she sleep. -> She asks not to watch television, while she is sleeping.
+
+#У нас нет вашего размера.
+#Having us not your size. -> We do not have your size.
+
+#За всё надо платить.
+#For everything must pay. -> One must pay for everything.
+
+#Ты мне нужна.
+#You I need. -> I need you.
+
+#Мне нужна вода.
+#I need water.
+
+#Тебе нравится моя юбка?
+#You like my skirt? -> Do you like my skirt?
+
+#Я хочу купить жене пальто.
+#I want to buy wife overcoat. -> I want to buy my wife an overcoat.
+
+#Вон те яблоки, пожалуйста.
+#Over there apples, please. -> Those apples over there, please.
+
+#Дайте, пожалуйста, вон то пальто.
+#Give me, please, over there overcoat. -> Give me that overcoat over there, please.
+
+#Её дочери ищут обувь для девочек.
+#Her daughters are looking footwear for girls. -> Her daughters are looking for footwear for girls.
+
+#Ей нужен размер поменьше.
+#She needs size smaller. -> She needs a smaller size.
+
+#Есть размер побольше?
+#There is size larger? -> Is there a larger size?
+
+#Это очень хорошая обувь.
+#This is very good footwear.
+
+#Какой вам нужен размер?
+#What you need size? -> What size do you need?
+
+#Почему вы вспоминаете этот день?
+#Why you remember this day? -> Why do you remember this day?
+
+#Мы забываем, где она живёт.
+#We forget, where she lives.
+
+#Я записываю всё, что он говорит.
+#I write down everything, that he says.
+
+#Мальчик переводит статью на русский язык.
+#Boy translating article into russian language. -> The boy is translating the article into russian.
+
+#Я люблю и работать, и отдыхать.
+#I like and working, and to rest. -> I like both working and resting.
+
+#В этом саду много цветов.
+#In this garden many flowers/colors. -> There are a lot of flowers in this garden.
+
+#Ваня иногда ходит в это кафе.
+#Vanya sometimes goes in this cafe. -> Vanya sometimes goes to this cafe.
+
+#Я люблю солнце и не люблю туман.
+#I like sun and not like fog. -> I like the sun and don't like the fog.
+
+#одна секунда
+#one second
+
+#Извините, можете сказать это ещё раз?
+#Excuse me, can you tell me that again?
+
+#один вопрос
+#one question
+
+#Нет, меня зовут Виктория.
+#No, my name Victoria. -> No, my name is Victoria.
+
+#Что не так?
+#What not right? -> What is wrong?
+
+#Извини, я сейчас занята.
+#Sorry, I currently busy. -> Sorry, I'm busy right now.
+
+#Что нам надо приготовить?
+#What we need to cook? -> What do we need to cook?
+
+#Я не знаю, как готовить эти грибы.
+#I not know, how cook these mushroom. -> I do not know how to cook these mushrooms.
+
+#Что у нас на обед?
+#What having us for lunch? -> What do we have for lunch?
+
+#У меня нет лука.
+#Having me not onion. -> I don't have any onion.
+
+#Вот нож, вилка и тарелка.
+#Here knife, fork and plate. -> Here is a knife, a fork, and a plate.
+
+#У нас нет мяса, зато есть рыба.
+#Having us not meat, but have fish. -> We do not have meat, but we have fish.
+
+#Дайте, пожалуйста, борщ.
+#Give me, please, borsh. -> Give me borsh, please.
+
+#Мне сейчас надо помыть посуду.
+#I currently need to wash dishes. -> I need to wash the dishes now.
+
+#Какие языки ты знаешь?
+#What languages you know? -> What languages do you know?
+
+#Наш кот очень тихий.
+#Our cat very quiet. -> Our cat is very quiet.
+
+#вкусная пицца
+#delicious pizza
+
+#Он интересный человек.
+#He interesting person. -> He is an interesting person.
+
+#Он знает, что делает.
+#He knows, what doing. -> He knows what he is doing.
+
+#Хлеб ещё горячий.
+#Bread still hot. -> The bread is still hot.
+
+#Ищу новый дом.
+#Am looking for new house. -> I am looking for a new house.
+
+#Это старый фильм, я его знаю.
+#It old film, I him know. -> It is an old film, I know it.
+
+#Рис тоже вкусный.
+#Rice also delicious. -> The rice is also delicious.
+
+#У вас дома есть горячая вода?
+#Having you home has hot water? -> Do you have hot water at home?
+
+#Это такой известный фильм!
+#It such famous film! -> It is such a famous movie!
+
+#Эта пицца такая вкусная.
+#This pizza so delicious. -> This pizza is so delicious.
+
+#На земле вилка.
+#On ground fork. -> There is a fork on the ground.
+
+#На земле трава.
+#On ground grass. -> There is grass on the ground.
+
+#Стул стоит на траве.
+#Chair standing on grass. -> The chair is on the grass.
+
+#Вы думаете, это тарелки?
+#You think, these plates? -> Do you think these are plates?
+
+#Я не понимаю, как они это пьют.
+#I not understand, how they that drink. -> I don't understand how they drink it.
+
+#Виктор хочет обедать.
+#Victor wants to have lunch.
+
+#Они видят кровать и ваш стол.
+#They see bed and your table. -> They see the bed and your table.
+
+#Вы уже хотите домой?
+#You already want home? -> You want to go home already?
+
+#Кошке хочется молока.
+#Cat would like milk. -> The cat would like some milk.
+
+#Он идёт к девочке домой.
+#He is going towards/to/for girl's house. -> He is going to the girl's house.
+
+#Пока, мы идём к бабушке.
+#Bye, we are going to grandma's.
+
+#Скажите учителю что меня завтра не будет.
+#Tell teacher that I tomorrow not will be. -> Tell the teacher I will be absent tomorrow.
+
+#Мне не хочется готовить.
+#I not feel like cooking. -> I do not feel like cooking.
+
+#Кому нравится эта книга?
+#Who enjoys this book?
+
+#Тебе нравятся те овощи?
+#You like those vegetables? -> Do you like those vegetables
+
+#Деньги от книги идут писателю.
+#Money from book go to writer. -> Money from the book goes to the writer.
+
+#Нам пора идти на работу.
+#Us time to go to work. -> It is time for us to go to work.
+
+#Что у тебя в сумках?
+#What having you in bags? -> What is in your bags?
+
+#Нине нужно новое платье.
+#Nina needs new dress. -> Nina needs a new dress.
+
+#Что находится в сумках?
+#What is situated/is located in bags? -> What is in the bags?
+
+#Пора, мой друг, пора!
+#It's time, my friend, it's time!
+
+#Девочкам пора домой.
+#Girls is time home. -> It's time for the girls to go home.
+
+#Вера думала о сумках.
+#Vera was thinking about bags. -> Vera was thinking about the bags.
+
+#Мальчикам не нравится борщ.
+#Boys not like borsh. -> The boys don't like borsh.
+
+#плохие учителя
+#bad teachers
+
+#Нине нужна новая юбка.
+#Nina needs new skirt. -> Nina needs a new skirt.
+
+#Кате нравится твоя книга.
+#Katya likes your book.
+
+#Я тебе верю.
+#I you believe. -> I believe you.
+
+#У всех есть вопросы.
+#Having all has questions. -> Everyone has questions.
+
+#Я знаю все правила.
+#I know all rules. -> I know all the rules.
+
+#книга о девочках
+#book about girls -> a book about girls
+
+#Я здесь всех знаю.
+#I here everyone know. -> I know everyone here.
+
+#Кому она верит?
+#Whom she believe? -> Who does she believe?
+
+#Я всем показываю парк.
+#I to everyone show park. -> I show the park to everyone.
+
+#Они тебе верят?
+#They you believe? -> Do they believe you?
+
+#Женщина показывает нам книги.
+#Women is showing us books. -> The women is showing us the books.
+
+#Я тебе не верю.
+#I you not believe. -> I do not believe you.
+
+#Она любит всех кошек.
+#She loves all cats.
+
+#Моим детям пора спать.
+#My children it's time sleep. -> It is time for my children to sleep.
+
+#Скажи это моим родителям.
+#Tell it my parents. -> Tell it to my parents.
+
+#Я даю своим детям подарки.
+#I giving my children presents. -> I am giving my children presents.
+
+#Твоим детям пора в школу.
+#Your children it's time in school. -> It's time for your children to go to school.
+
+#Твоим детям нравится его музыка?
+#Your children like his music? -> Do your children like his music?
+
+#Моя кошка ест очень долго.
+#My cat eats very long. -> My cat eats for a very long time.
+
+#Я уже говорила твоим родителям, что не люблю кошек.
+#I already have told your parents, that not like cats. -> I have already told your parents that I do not like cats.
+
+#Я пишу своим детям длинное письмо.
+#I writing my children long letter. -> I am writing a long letter to my children.
+
+#Марк долго тут работает.
+#Mark long here been working. -> Mark has been working here for a long time.
+
+#Моим родителям нужен хлеб.
+#My parents need bread.
+
+#Трудно сказать.
+#Hard to tell. -> It is hard to tell.
+
+#Обычно он дома.
+#Usually he home. -> Usually, he is at home.
+
+#новые мысли и старые слова
+#new thoughts and old words
+
+#Я объяснял план.
+#I was explaining plan. -> I was explaining the plan.
+
+#Это всё объясняет.
+#That everything explains. -> That explains everything.
+
+#Её словам не хочется верить
+#Her words not want believe. -> One does not want to believe her words.
+
+#Дереву нужна вода.
+#Tree needs water. -> A tree needs water.
+
+#Там растут деревья и цветы.
+#There are growing trees and flowers. -> Trees and flowers grow there.
+
+#Мне трудно думать о ней.
+#For me hard think about her. -> It's hard for me to think about her.
+
+#Это долго объяснять.
+#This long to explain. -> This will take a long time to explain.
+
+#Это хорошие слова.
+#These good words. -> These are good words.
+
+#Мы часто гуляем по городу.
+#We often walk around city. -> We often walk around the city.
+
+#Мы идём к парку.
+#We walking towards park. -> We are walking towards the park.
+
+#Пока мы идём к бабушке.
+#Bye, we are going towards grandma's. -> Bye, we are going to grandma's.
+
+#Кому нравится эта книга?
+#Who likes this book?
+
+#Кому нравятся книги этого автора?
+#Who likes books this author? -> Who likes the books by this author?
+
+#Кошке хочется молока.
+#Cat would like milk. -> The cat would like some milk.
+
+#Марк ходил по улице и смотрел на дома.
+#Mark walking down street and looking at houses. -> Mark is walking down the street and looking at the houses.
+
+#Скажи это моим родителям.
+#Tell it my parents. -> Tell it to my parents.
+
+#Скажите своим детям, что пора уже спать.
+#Tell your children, that it's time already to sleep. -> Tell your children that it's already time to sleep.
+
+#Это её слова.
+#It her words. -> It is her words.
+
+#Я бросаю яблоки в коробку.
+#I am throwing apples in box. -> I am throwing the apples into the box.
+
+#Я хочу жить хорошо.
+#I want live well. -> I want to live well.
+
+#Чьё это полотенце?
+#Whose this towel? -> Whose towel is this?
+
+#Извините, у нас нет супа, но есть рис и хлеб.
+#Sorry, having us not soup, but have rice and bread. -> Sorry, we do not have soup, but we have rice and bread.
+
+#Это правда что Мария знает немецкий?
+#It true that Maria know German? -> Is it true that Maria knows German?
+
+#Где твоя девушка любит завтракать?
+#Where your girlfriend like to have breakfest? -> Where does your girlfriend like to have breakfast?
+
+#Они не говорили, где живут.
+#They not said, where live. -> They have not said where they live.
+
+#Я этого не говорил.
+#I this not did say. -> I did not say this.
+
+#Вы можете мне ответить?
+#You could me answer? -> Could you answer me?
+
+#Я не знаю, идти ли домой.
+#I not know, to go if home -> I did not know whether to go home.
+
+#Нина ищет свой пропуск.
+#Nina looking for own permit. -> Nina is looking for her permit.
+
+#Я думал, ты много читаешь.
+#I thought, you a lot read. -> I thought you read a lot.
+
+#О чём они говорят?
+#About what they talking? -> What are they talking about?
+
+#Я спросила, и они ответили.
+#I asked, and they answered.
+
+#Дети уже говорили мне, что фильм хороший.
+#Children already told me, that film good. -> The children already told me the movie was good.
+
+#Я не спросила, хочет ли он спать.
+#I not asked, want if he sleep. -> I did not ask if he wanted to sleep.
+
+#Он спросил, есть ли у тебя пропуск.
+#He asked, have if having you permit. -> He asked weather you had a permit.
+
+#Я не знаю, играет ли он на пианино.
+#I not know, play if he on piano. -> I do not know if he plays the piano.
+
+#Они думали, что ты в Америке.
+#They thought, that you in America. -> They thought that you were in America.
+
+#Нет, это ошибка.
+#No, it mistake/error. -> No, it is a mistake.
+
+#интересная лекция
+#interesting lecture
+
+#Может быть, это ошибка.
+#Might be, this error/mistake. -> Maybe it is a mistake.
+
+#Какой язык вы изучаете?
+#Which language you study? -> Which language do you study?
+
+#Я вижу здесь ошибку.
+#I see here mistake. -> I see a mistake here.
+
+#Я изучаю русский язык.
+#I study russian language. -> I study the russian language.
+
+#Мария ищет ошибки.
+#Maria looking for mistakes. -> Maria is looking for mistakes.
+
+#Вера хочет всё, кроме сыра.
+#Vera want everything, except cheese. -> Vera wants everything except cheese.
+
+#Может быть, он думал обо мне.
+#Might be, he was thinking about me. -> Maybe he was thinking about me.
+
+#Он заканчивает писать статью.
+#He finishes writing article. -> He finishes writing the article.
+
+#В этой книге нет ошибок.
+#In this book not mistake. -> There are no mistakes in this book.
+
+#Преподаватель изучал русский в университете.
+#Professor studied russian in university. -> The professor studied russian at the university.
+
+#Я думал. что лекция будет завтра.
+#I thought, that lecture was tomorrow. -> I thought that the lecture was going to be tomorrow.
+
+#Ты не ответила на мой вопрос.
+#You not answer to my question. -> You did not answer my question.
+
+#Преподаватель заканчивает лекцию.
+#Professor finishing lecture. -> The professor is finishing the lecture.
+
+#Мне нравится всё, кроме кровати.
+#I like everything, except bed. -> I like everything, except for the bed.
+
+#Он делает много ошибок.
+#He make lot of mistakes. -> He makes a lot of mistakes.
+
+#Наш преподаватель изучал немецкий в Германии.
+#Our professor studied German in Germany.
+
+#Я не понимаю лекцию.
+#I not understand lecture. -> I don't understand the lecture.
+
+#Все, кроме вас, играют в теннис.
+#Everyone, except you, play in tennis. -> Everyone, except you, plays tennis.
+
+#Катя заканчивает готовить ужин.
+#Katya finishes cooking supper.
+
+#Мой младший брат изучает английский.
+#My younger brother studies English.
 
 #
