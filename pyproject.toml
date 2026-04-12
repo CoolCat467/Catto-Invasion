@@ -54,7 +54,7 @@ catto_invasion_game = "catto_invasion.game:cli_run"
 
 [project.optional-dependencies]
 tests = [
-    "pytest>=5.0",
+    "pytest>=9.0.2",
     "pytest-cov",
     "pytest-trio",
     "coverage>=7.2.5",
