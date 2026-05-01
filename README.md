@@ -4,7 +4,6 @@ Catto Invasion Visual Novel
 [![CI](https://github.com/CoolCat467/Catto-Invasion/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CoolCat467/Catto-Invasion/actions/workflows/ci.yml)
 <!-- BADGIE TIME -->
 
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/CoolCat467/Catto-Invasion/main.svg)](https://results.pre-commit.ci/latest/github/CoolCat467/Catto-Invasion/main)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 <!-- END BADGIE TIME -->
